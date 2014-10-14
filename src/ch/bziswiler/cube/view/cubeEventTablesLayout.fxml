@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Accordion fx:id="accordion" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeEventTablesController">
+  <panes>
+      <TitledPane fx:id="statsPane" animated="false" expanded="false" text="Jugendliche nach Gemeinde">
+         <content>
+            <TableView fx:id="statsTable" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Ort" />
+                <TableColumn prefWidth="75.0" text="Anzahl" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </content>
+      </TitledPane>
+    <TitledPane fx:id="youthMembersPane" animated="false" expanded="false" text="Youth Members">
+      <content>
+            <TableView fx:id="youthMembersTable" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <columns>
+                <TableColumn fx:id="youthStaffTableFirstNameColumn" prefWidth="75.0" text="First Name" />
+                <TableColumn fx:id="youthStaffTableLastNameColumn" prefWidth="75.0" text="Last Name" />
+                  <TableColumn fx:id="youthMembersTableCheckInColumn" prefWidth="75.0" text="Check-In" />
+                  <TableColumn fx:id="youthMembersTableCheckOutColumn" prefWidth="75.0" text="Check-Out" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+      </content>
+    </TitledPane>
+    <TitledPane fx:id="youthStaffPane" animated="false" expanded="false" text="Youth Staff">
+      <content>
+            <TableView fx:id="youthStaffTable" styleClass="background">
+              <columns>
+                <TableColumn fx:id="youthMembersTableFirstNameColumn" prefWidth="75.0" text="First Name" />
+                <TableColumn fx:id="youthMembersTableLastNameColumn" prefWidth="75.0" text="Last Name" />
+                  <TableColumn fx:id="youthStaffTableCheckInColumn" prefWidth="75.0" text="Check-In" />
+                  <TableColumn fx:id="youthStaffTableCheckOutColumn" prefWidth="75.0" text="Check-Out" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+      </content>
+    </TitledPane>
+      <TitledPane fx:id="adultStaffPane" animated="false" expanded="false" text="Adult Staff">
+         <content>
+            <TableView fx:id="adultStaffTable" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <columns>
+                  <TableColumn fx:id="adultStaffTableFirstNameColumn" prefWidth="75.0" text="First Name" />
+                  <TableColumn fx:id="adultStaffTableLastNameColumn" prefWidth="75.0" text="Last Name" />
+                  <TableColumn fx:id="adultStaffTableCheckInColumn" prefWidth="75.0" text="Check-In" />
+                  <TableColumn fx:id="adultStaffTableCheckOutColumn" prefWidth="75.0" text="Check-Out" />
+               </columns>
+            </TableView>
+         </content>
+      </TitledPane>
+      <TitledPane fx:id="driversPane" animated="false" expanded="false" text="Drivers">
+         <content>
+            <TableView fx:id="driversTable" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <columns>
+                  <TableColumn fx:id="driversTableFirstNameColumn" prefWidth="75.0" text="First Name" />
+                  <TableColumn fx:id="driversTableLastNameColumn" prefWidth="75.0" text="Last Name" />
+                  <TableColumn fx:id="driversTableCheckInColumn" prefWidth="75.0" text="Check-In" />
+                  <TableColumn fx:id="driversTableCheckOutColumn" prefWidth="75.0" text="Check-Out" />
+               </columns>
+            </TableView>
+         </content>
+      </TitledPane>
+  </panes>
+   <padding>
+      <Insets left="2.0" top="2.0" />
+   </padding>
+</Accordion>

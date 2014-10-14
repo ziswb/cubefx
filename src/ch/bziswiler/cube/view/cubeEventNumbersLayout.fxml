@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeEventNumbersController">
+   <children>
+      <GridPane alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="90.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="106.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" prefWidth="106.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Anwesend" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="Jugendliche" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="9" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Gesamt" GridPane.columnIndex="2">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="14" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Erwachsene" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="3" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="3" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Total" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label text="12" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Label>
+            <Label text="17" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+            </Label>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+   </children>
+   <padding>
+      <Insets bottom="2.0" left="2.0" top="2.0" />
+   </padding>
+</AnchorPane>

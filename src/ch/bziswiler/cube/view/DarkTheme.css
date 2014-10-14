@@ -1,0 +1,164 @@
+.background {
+    -fx-background-color: #4F4F4F;
+}
+
+.label {
+    /*-fx-font-size: 11pt;*/
+    -fx-font-family: "Helvetica-LightOblique";
+    -fx-text-fill: white;
+    -fx-opacity: 0.6;
+}
+
+.label-bright {
+    /*-fx-font-size: 11pt;*/
+    -fx-font-family: "Helvetica-LightOblique";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+.label-header {
+    /*-fx-font-size: 32pt;*/
+    -fx-font-family: "Helvetica-Light";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+.table-view {
+    -fx-base: #4F4F4F;
+    -fx-control-inner-background: #4F4F4F;
+    -fx-background-color: #4F4F4F;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-padding: 5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+
+.table-view .column-header, .table-view .filler {
+    /*-fx-size: 35;*/
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: transparent;
+    -fx-border-color: 
+        transparent
+        transparent
+        derive(-fx-base, 80%) 
+        transparent;
+    -fx-border-insets: 0 10 1 0;
+}
+
+.table-row-cell .new {
+    -fx-background-color: indianred;
+}
+
+.table-view .column-header .label {
+    /*-fx-font-size: 20pt;*/
+    -fx-font-family: "Helvetica-Light";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-opacity: 1;
+}
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-border-color: transparent #4F4F4F transparent #4F4F4F;
+    -fx-background-color: transparent, derive(#4F4F4F,20%);
+}
+
+.split-pane {
+    -fx-padding: 1 0 0 0;
+}
+
+.menu-bar {
+    -fx-background-color: derive(#4F4F4F,20%);
+}
+
+.context-menu {
+    -fx-background-color: derive(#4F4F4F,50%);
+}
+
+.menu-bar .label {
+    /*-fx-font-size: 14pt;*/
+    -fx-font-family: "Helvetica-Light";
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+}
+
+.menu .left-container {
+	-fx-background-color: black;
+}
+
+.text-field {
+    /*-fx-font-size: 12pt;*/
+    -fx-font-family: "Helvetica-LightOblique";
+}
+
+/* 
+ * Metro style Push Button
+ * Author: Pedro Duque Vieira
+ * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
+ */
+.button, .button:hover, .button:focused:hover, .button:pressed, .button:focused {
+    -fx-padding: 10 12 10 12;
+    -fx-font-weight: normal;
+    -fx-text-fill: white;
+    -fx-font-family: "Helvetica";
+    -fx-background-insets: 0,1,3,4,5;
+    -fx-background-radius: 7,6,5,4,3;
+    /*-fx-background-insets: 0,1,2,3,4;*/
+    /*-fx-background-radius: 5,4,3,2,1;*/
+}
+
+.button {
+    -fx-background-color:
+    linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
+    linear-gradient(#020b02, #3a3a3a),
+    linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #242424 100%);
+}
+
+.button:hover, .button:focused:hover {
+    -fx-background-color:
+    linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
+    linear-gradient(#020b02, #3a3a3a),
+    linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #242424 100%),
+    linear-gradient(#8a8a8a 0%, #6b6a6b 20%, #343534 80%, #262626 100%),
+    linear-gradient(#777777 0%, #606060 50%, #505250 51%, #2a2b2a 100%);
+}
+
+.button:pressed, .button:focused:pressed {
+    -fx-background-color:
+    linear-gradient(#757575 0%, #373837 25%, #232723 75%, #686868 100%),
+    linear-gradient(#3a3a3a, #020b02),
+    linear-gradient(#242424 0%, #343534 20%, #6b6a6b 80%, #9d9e9d 100%),
+    linear-gradient(#262626 0%, #343534 20%, #6b6a6b 80%, #8a8a8a 100%),
+    linear-gradient(#2a2b2a 0%, #505250 50%, #606060 51%, #777777 100%);
+    -fx-background-insets: 0,1,3,4,5;
+    -fx-background-radius: 7,6,5,4,3;
+}
+
+.button:focused {
+    -fx-background-color:
+    linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
+    linear-gradient(#020b02, #3a3a3a),
+    linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #242424 100%);
+}
+
+/*.button:disabled, .button:default:disabled {*/
+    /*-fx-opacity: 0.4;*/
+    /*-fx-background-color: #4F4F4F;*/
+    /*-fx-text-fill: white;*/
+/*}*/
+
+/*.button:default {*/
+    /*-fx-background-color: -fx-focus-color;*/
+    /*-fx-text-fill: #ffffff;*/
+/*}*/
+
+/*.button:default:hover {*/
+    /*-fx-background-color: derive(-fx-focus-color,30%);*/
+/*}*/

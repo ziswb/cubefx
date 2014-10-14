@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeScanMemberController">
+   <children>
+      <AnchorPane styleClass="background" VBox.vgrow="ALWAYS">
+         <children>
+            <ComboBox fx:id="personCombo" editable="true" layoutX="25.0" layoutY="20.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="330.0" promptText="Find" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <GridPane layoutX="25.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" vgap="11.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="130.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="addressLabel" text="Oberdorfstrasse 41" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="cityLabel" text="4013 Baselikon" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="birthdayLabel" text="5.2.2001 (13 Jahre)" GridPane.rowIndex="3">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="nameLabel" text="Peter Muster">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+            <ImageView fx:id="portrait" fitHeight="160.0" fitWidth="110.0" layoutX="227.0" layoutY="60.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="220.0" AnchorPane.topAnchor="40.0">
+               <image>
+                  <Image url="@../../../../resources/images/64Px_Portrait_Man.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+            <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" layoutX="20.0" layoutY="164.0" mnemonicParsing="false" text="_/" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="190.0">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/images/edit.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <GridPane hgap="2.0" layoutX="220.0" layoutY="210.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="275.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" valignment="CENTER" vgrow="ALWAYS" />
+                <RowConstraints maxHeight="-Infinity" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="-Infinity" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="-Infinity" valignment="CENTER" vgrow="ALWAYS" />
+                  <RowConstraints maxHeight="-Infinity" valignment="CENTER" vgrow="ALWAYS" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="checkOutButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleCheckOutClicked" prefHeight="50.0" prefWidth="200.0" text="Check-Out" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Button fx:id="addYouthStaffButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddYouthStaffButtonClicked" prefHeight="50.0" prefWidth="200.0" text="Youth Staff" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Button fx:id="addYouthMemberButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddYouthMemberButtonClicked" prefHeight="50.0" prefWidth="200.0" text="Youth Member" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Button fx:id="addAdultStaffButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddAdultStaffButtonClicked" prefHeight="50.0" prefWidth="200.0" text="Staff" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+                  <Button fx:id="addDriverButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddDriverButtonClicked" prefHeight="50.0" prefWidth="200.0" text="Driver" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
+               </children>
+            </GridPane>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets right="2.0" />
+   </padding>
+</VBox>
