@@ -94,12 +94,12 @@ public class CubeEventTablesController extends EventControllerScaffold {
     private Callback<Void, Void> callback = new Callback<Void, Void>() {
         @Override
         public Void call(Void param) {
+            new EventStatistics(getModelProperty().get()).update();
             System.out.println("param = " + param);
-            computeNumberOfVisitors();
-            final FilteredList<Visit> youthMembers = getEvent().youthMemberVisitsProperty().filtered(visit -> {
+            final FilteredList<Visit> youthMembers = getModel().youthMemberVisitsProperty().filtered(visit -> {
                 return visit.checkOutProperty().isNotNull().get();
             });
-            final FilteredList<Visit> youthStaff = getEvent().youthStaffVisitsProperty().filtered(visit -> {
+            final FilteredList<Visit> youthStaff = getModel().youthStaffVisitsProperty().filtered(visit -> {
                 return visit.checkOutProperty().isNotNull().get();
             });
             final Map<City, Integer> map = new HashMap<>();
@@ -139,21 +139,6 @@ public class CubeEventTablesController extends EventControllerScaffold {
             }
             return null;
         }
-
-        private void computeNumberOfVisitors() {
-            final int youthMembers = getEvent().youthMemberVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            }).size();
-            final int youthStaff = getEvent().youthStaffVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            }).size();
-            final int adultStaff = getEvent().adultStaffVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            }).size();
-            final int drivers = getEvent().driverVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            }).size();
-        }
     };
 
     @FXML
@@ -163,7 +148,11 @@ public class CubeEventTablesController extends EventControllerScaffold {
         initializeTable(this.driversTableFirstNameColumn, this.driversTableLastNameColumn, this.adultStaffTableCheckInColumn, this.adultStaffTableCheckOutColumn);
         initializeTable(this.adultStaffTableFirstNameColumn, this.adultStaffTableLastNameColumn, this.driversTableCheckInColumn, this.driversTableCheckOutColumn);
         initializeStatsTable(this.statsCityColumn, this.statsNumberColumn);
-        TitledPane firstPane = this.accordion.getPanes().get(0);
+        initializeAccordion();
+    }
+
+    private void initializeAccordion() {
+        final TitledPane firstPane = this.accordion.getPanes().get(0);
         firstPane.setCollapsible(false);
         firstPane.setExpanded(true);
         this.accordion.setExpandedPane(firstPane);

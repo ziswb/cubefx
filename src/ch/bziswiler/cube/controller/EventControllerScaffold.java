@@ -7,14 +7,22 @@ import javafx.beans.value.ObservableValue;
 
 public abstract class EventControllerScaffold implements ChangeListener<CubeEventModel> {
 
-    private ObjectProperty<CubeEventModel> event;
+    private ObjectProperty<CubeEventModel> model;
+    private ObjectProperty<EventStatistics> stats;
 
-    public ObjectProperty<CubeEventModel> getEventProperty() {
-        if (this.event == null) {
-            this.event = new SimpleObjectProperty();
-            this.event.addListener(this);
+    public ObjectProperty<CubeEventModel> getModelProperty() {
+        if (this.model == null) {
+            this.model = new SimpleObjectProperty();
+            this.model.addListener(this);
         }
-        return this.event;
+        return this.model;
+    }
+
+    public ObjectProperty<EventStatistics> getStatsProperty() {
+        if (this.stats == null) {
+            this.stats = new SimpleObjectProperty();
+        }
+        return this.stats;
     }
 
     @Override
@@ -28,13 +36,14 @@ public abstract class EventControllerScaffold implements ChangeListener<CubeEven
     }
 
     protected abstract void initialize(CubeEventModel newValue);
+
     protected abstract void dispose(CubeEventModel oldValue);
 
-    public final CubeEventModel getEvent() {
-        return getEventProperty().get();
+    public final CubeEventModel getModel() {
+        return getModelProperty().get();
     }
 
-    public final void setEvent(CubeEventModel event) {
-        getEventProperty().set(event);
+    public final void setModel(CubeEventModel model) {
+        getModelProperty().set(model);
     }
 }

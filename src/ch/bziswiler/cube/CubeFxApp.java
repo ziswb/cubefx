@@ -2,10 +2,7 @@ package ch.bziswiler.cube;
 
 import ch.bziswiler.cube.controller.CubeEventModel;
 import ch.bziswiler.cube.controller.EventControllerScaffold;
-import ch.bziswiler.cube.model.event.Event;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
@@ -60,7 +57,7 @@ public class CubeFxApp extends Application {
         loader.setLocation(CubeFxApp.class.getResource(path));
         Object pane = loader.load();
         EventControllerScaffold controller = loader.getController();
-        controller.setEvent(EVENT);
+        controller.setModel(EVENT);
         return pane;
     }
 

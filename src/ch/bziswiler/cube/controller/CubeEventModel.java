@@ -75,6 +75,7 @@ public class CubeEventModel {
 
     private ObjectProperty<Event> event;
     private ChangeListener<Event> eventListChangeListener;
+    private final EventStatistics stats;
 
     public CubeEventModel() {
         this.eventListChangeListener = new ChangeListener<Event>() {
@@ -85,6 +86,7 @@ public class CubeEventModel {
         };
         // TODO resolve event dependency
         eventProperty().set(new Event());
+        this.stats = new EventStatistics(this);
     }
 
     // Event Duration View
@@ -390,6 +392,10 @@ public class CubeEventModel {
         personsProperty().addAll(persons);
     }
 
+    public final EventStatistics getStats() {
+        return this.stats;
+    }
+
     // Cube Event Model
 
     public ObjectProperty<Event> eventProperty() {
@@ -486,11 +492,9 @@ public class CubeEventModel {
         }
     }
 
-
     public void handleAddYouthMemberButtonClicked() {
         addSelectedPersonWrappedInVisit(getEvent().youthMemberVisitsProperty());
     }
-
 
     public void handleAddYouthStaffButtonClicked() {
         addSelectedPersonWrappedInVisit(getEvent().youthStaffVisitsProperty());
@@ -510,6 +514,7 @@ public class CubeEventModel {
             visit.get().setCheckOut(LocalDateTime.now());
         }
         updateButtonEnablement(selectedPersonProperty().get());
+        updateStatistics();
     }
 
     private void addSelectedPersonWrappedInVisit(ListProperty<Visit> visits) {
@@ -518,5 +523,10 @@ public class CubeEventModel {
         visit.setCheckIn(LocalDateTime.now());
         visits.add(visit);
         updateButtonEnablement(selectedPersonProperty().get());
+        updateStatistics();
+    }
+
+    private void updateStatistics() {
+        this.stats.update();
     }
 }

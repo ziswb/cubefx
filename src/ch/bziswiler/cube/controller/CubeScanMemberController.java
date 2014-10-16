@@ -57,28 +57,28 @@ public class CubeScanMemberController extends EventControllerScaffold {
 
     @FXML
     private void handleAddYouthMemberButtonClicked() {
-        getEvent().handleAddYouthMemberButtonClicked();
+        getModel().handleAddYouthMemberButtonClicked();
     }
 
 
     @FXML
     private void handleAddYouthStaffButtonClicked() {
-        getEvent().handleAddYouthStaffButtonClicked();
+        getModel().handleAddYouthStaffButtonClicked();
     }
 
     @FXML
     private void handleAddAdultStaffButtonClicked() {
-        getEvent().handleAddAdultStaffButtonClicked();
+        getModel().handleAddAdultStaffButtonClicked();
     }
 
     @FXML
     private void handleAddDriverButtonClicked() {
-        getEvent().handleAddDriverButtonClicked();
+        getModel().handleAddDriverButtonClicked();
     }
 
     @FXML
     private void handleCheckOutClicked() {
-        getEvent().handleCheckOutClicked();
+        getModel().handleCheckOutClicked();
     }
 
     private void initializeCombo() {
@@ -129,19 +129,19 @@ public class CubeScanMemberController extends EventControllerScaffold {
     }
 
     private void createBindings() {
-        getEvent().selectedPersonProperty().bind(this.personCombo.getSelectionModel().selectedItemProperty());
-        addDriverButton.disableProperty().bind(getEvent().addDriverButtonEnabledProperty());
-        addAdultStaffButton.disableProperty().bind(getEvent().addAdultStaffButtonEnabledProperty());
-        addYouthMemberButton.disableProperty().bind(getEvent().addYouthMemberButtonEnabledProperty());
-        addYouthStaffButton.disableProperty().bind(getEvent().addYouthStaffButtonEnabledProperty());
-        checkOutButton.disableProperty().bind(getEvent().checkOutButtonEnabledProperty());
-        portrait.imageProperty().bind(getEvent().portraitImageProperty());
-        nameLabel.textProperty().bind(getEvent().selectedPersonNameProperty());
+        getModel().selectedPersonProperty().bind(this.personCombo.getSelectionModel().selectedItemProperty());
+        addDriverButton.disableProperty().bind(getModel().addDriverButtonEnabledProperty());
+        addAdultStaffButton.disableProperty().bind(getModel().addAdultStaffButtonEnabledProperty());
+        addYouthMemberButton.disableProperty().bind(getModel().addYouthMemberButtonEnabledProperty());
+        addYouthStaffButton.disableProperty().bind(getModel().addYouthStaffButtonEnabledProperty());
+        checkOutButton.disableProperty().bind(getModel().checkOutButtonEnabledProperty());
+        portrait.imageProperty().bind(getModel().portraitImageProperty());
+        nameLabel.textProperty().bind(getModel().selectedPersonNameProperty());
     }
 
     @Override
     protected void dispose(CubeEventModel oldValue) {
-        getEvent().selectedPersonProperty().unbind();
+        getModel().selectedPersonProperty().unbind();
         addDriverButton.disableProperty().unbind();
         addAdultStaffButton.disableProperty().unbind();
         addYouthMemberButton.disableProperty().unbind();
