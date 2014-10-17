@@ -8,7 +8,6 @@ import javafx.beans.value.ObservableValue;
 public abstract class EventControllerScaffold implements ChangeListener<CubeEventModel> {
 
     private ObjectProperty<CubeEventModel> model;
-    private ObjectProperty<EventStatistics> stats;
 
     public ObjectProperty<CubeEventModel> getModelProperty() {
         if (this.model == null) {
@@ -16,13 +15,6 @@ public abstract class EventControllerScaffold implements ChangeListener<CubeEven
             this.model.addListener(this);
         }
         return this.model;
-    }
-
-    public ObjectProperty<EventStatistics> getStatsProperty() {
-        if (this.stats == null) {
-            this.stats = new SimpleObjectProperty();
-        }
-        return this.stats;
     }
 
     @Override
