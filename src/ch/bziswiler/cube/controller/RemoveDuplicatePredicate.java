@@ -35,6 +35,7 @@ public class RemoveDuplicatePredicate implements Predicate<Visit> {
 
     @Override
     public boolean test(Visit visit) {
+        // FIXME
         boolean firstOccurrenceFound = DONT_INCLUDE_THIS_VISIT_IN_LIST;
         final Person visitsPerson = visit.personProperty().get();
         for (Visit v : list) {

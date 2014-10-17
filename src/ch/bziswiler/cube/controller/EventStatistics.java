@@ -23,10 +23,10 @@ public class EventStatistics {
     private ReadOnlyIntegerWrapper numberOfPresentYouthStaffProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfPresentAdultStaffProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfPresentDriversProperty = new ReadOnlyIntegerWrapper();
-    private ReadOnlyIntegerWrapper totalNumberOfYouthMembersProperty = new ReadOnlyIntegerWrapper();
-    private ReadOnlyIntegerWrapper totalNumberOfYouthStaffProperty = new ReadOnlyIntegerWrapper();
-    private ReadOnlyIntegerWrapper totalNumberOfAdultStaffProperty = new ReadOnlyIntegerWrapper();
-    private ReadOnlyIntegerWrapper totalNumberOfDriversProperty = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper numberOfAllYouthMembersProperty = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper numberOfAllYouthStaffProperty = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper numberOfAllAdultStaffProperty = new ReadOnlyIntegerWrapper();
+    private ReadOnlyIntegerWrapper numberOfAllDriversProperty = new ReadOnlyIntegerWrapper();
 
     public EventStatistics(CubeEventModel model) {
         this.model = model;
@@ -41,7 +41,7 @@ public class EventStatistics {
     }
 
     public ReadOnlyIntegerProperty numberOfAllYouthMembersProperty() {
-        return totalNumberOfYouthMembersProperty.getReadOnlyProperty();
+        return numberOfAllYouthMembersProperty.getReadOnlyProperty();
     }
 
     public ReadOnlyIntegerProperty numberOfPresentYouthStaffProperty() {
@@ -49,7 +49,7 @@ public class EventStatistics {
     }
 
     public ReadOnlyIntegerProperty numberOfAllYouthStaffProperty() {
-        return totalNumberOfYouthStaffProperty.getReadOnlyProperty();
+        return numberOfAllYouthStaffProperty.getReadOnlyProperty();
     }
 
     public ReadOnlyIntegerProperty numberOfPresentAdultStaffProperty() {
@@ -57,7 +57,7 @@ public class EventStatistics {
     }
 
     public ReadOnlyIntegerProperty numberOfAllAdultStaffProperty() {
-        return totalNumberOfAdultStaffProperty.getReadOnlyProperty();
+        return numberOfAllAdultStaffProperty.getReadOnlyProperty();
     }
 
     public ReadOnlyIntegerProperty numberOfPresentDriversProperty() {
@@ -65,31 +65,31 @@ public class EventStatistics {
     }
 
     public ReadOnlyIntegerProperty numberOfAllDriversProperty() {
-        return totalNumberOfDriversProperty.getReadOnlyProperty();
+        return numberOfAllDriversProperty.getReadOnlyProperty();
     }
 
-    private int computeNumberOfMembers(ListProperty<Visit> visits) {
+    private int computeNumberOfPresentMembers(ListProperty<Visit> visits) {
         return visits.filtered(this.presentMembersPredicate).size();
     }
 
-    private int computeTotalNumberOfMembers(ListProperty<Visit> visits) {
+    private int computeNumberOfAllMembers(ListProperty<Visit> visits) {
         return visits.filtered(new RemoveDuplicatePredicate(visits)).size();
     }
 
     public void update() {
         if (getEvent() != null) {
 
-            numberOfPresentYouthMembersProperty.set(computeNumberOfMembers(getEvent().youthMemberVisitsProperty()));
-            totalNumberOfYouthMembersProperty.set(computeTotalNumberOfMembers(getEvent().youthMemberVisitsProperty()));
+            numberOfPresentYouthMembersProperty.set(computeNumberOfPresentMembers(getEvent().youthMemberVisitsProperty()));
+            numberOfAllYouthMembersProperty.set(computeNumberOfAllMembers(getEvent().youthMemberVisitsProperty()));
 
-            numberOfPresentYouthStaffProperty.set(computeNumberOfMembers(getEvent().youthStaffVisitsProperty()));
-            totalNumberOfYouthStaffProperty.set(computeTotalNumberOfMembers(getEvent().youthStaffVisitsProperty()));
+            numberOfPresentYouthStaffProperty.set(computeNumberOfPresentMembers(getEvent().youthStaffVisitsProperty()));
+            numberOfAllYouthStaffProperty.set(computeNumberOfAllMembers(getEvent().youthStaffVisitsProperty()));
 
-            numberOfPresentAdultStaffProperty.set(computeNumberOfMembers(getEvent().adultStaffVisitsProperty()));
-            totalNumberOfAdultStaffProperty.set(computeTotalNumberOfMembers(getEvent().adultStaffVisitsProperty()));
+            numberOfPresentAdultStaffProperty.set(computeNumberOfPresentMembers(getEvent().adultStaffVisitsProperty()));
+            numberOfAllAdultStaffProperty.set(computeNumberOfAllMembers(getEvent().adultStaffVisitsProperty()));
 
-            numberOfPresentDriversProperty.set(computeNumberOfMembers(getEvent().driverVisitsProperty()));
-            totalNumberOfDriversProperty.set(computeTotalNumberOfMembers(getEvent().driverVisitsProperty()));
+            numberOfPresentDriversProperty.set(computeNumberOfPresentMembers(getEvent().driverVisitsProperty()));
+            numberOfAllDriversProperty.set(computeNumberOfAllMembers(getEvent().driverVisitsProperty()));
 
             computeSomeThing();
         }

@@ -120,12 +120,6 @@ public class CubeScanMemberController extends EventControllerScaffold {
                 }
             }
         });
-        this.personCombo.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                personCombo.getEditor().selectAll();
-            }
-        });
     }
 
     private void createBindings() {

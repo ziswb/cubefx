@@ -1,6 +1,5 @@
 package ch.bziswiler.cube.controller;
 
-import ch.bziswiler.cube.model.address.City;
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.animation.PauseTransition;
@@ -8,7 +7,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
@@ -21,7 +19,6 @@ import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.FormatStyle;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
@@ -91,55 +88,6 @@ public class CubeEventTablesController extends EventControllerScaffold {
     private PaneExpander youthStaffPaneExpander;
     private PaneExpander adultStaffPaneExpander;
     private PaneExpander driversPaneExpander;
-    private Callback<Void, Void> callback = new Callback<Void, Void>() {
-        @Override
-        public Void call(Void param) {
-            new EventStatistics(getModelProperty().get()).update();
-            System.out.println("param = " + param);
-            final FilteredList<Visit> youthMembers = getModel().youthMemberVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            });
-            final FilteredList<Visit> youthStaff = getModel().youthStaffVisitsProperty().filtered(visit -> {
-                return visit.checkOutProperty().isNotNull().get();
-            });
-            final Map<City, Integer> map = new HashMap<>();
-            for (Visit visit : youthMembers) {
-                if (
-                        visit.personProperty().isNull().or(
-                                visit.personProperty().get().addressProperty().isNull().or(
-                                        visit.personProperty().get().addressProperty().get().cityProperty().isNull()
-                                )
-                        ).get()
-                        ) {
-                    continue;
-                }
-                final City city = visit.personProperty().get().addressProperty().get().getCity();
-                if (!map.containsKey(city)) {
-                    map.put(city, 1);
-                } else {
-                    map.put(city, map.get(city) + 1);
-                }
-            }
-            for (Visit visit : youthStaff) {
-                if (
-                        visit.personProperty().isNull().or(
-                                visit.personProperty().get().addressProperty().isNull().or(
-                                        visit.personProperty().get().addressProperty().get().cityProperty().isNull()
-                                )
-                        ).get()
-                        ) {
-                    continue;
-                }
-                final City city = visit.personProperty().get().addressProperty().get().getCity();
-                if (!map.containsKey(city)) {
-                    map.put(city, 1);
-                } else {
-                    map.put(city, map.get(city) + 1);
-                }
-            }
-            return null;
-        }
-    };
 
     @FXML
     private void initialize() {
@@ -170,7 +118,7 @@ public class CubeEventTablesController extends EventControllerScaffold {
                 });
             }
         });
-        youthMemberPaneExpander = new PaneExpander(youthMembersPane, accordion, this.callback);
+        youthMemberPaneExpander = new PaneExpander(youthMembersPane, accordion);
         youthStaffPaneExpander = new PaneExpander(youthStaffPane, accordion);
         adultStaffPaneExpander = new PaneExpander(adultStaffPane, accordion);
         driversPaneExpander = new PaneExpander(driversPane, accordion);
