@@ -6,13 +6,13 @@ import javafx.beans.property.ListProperty;
 
 import java.util.function.Predicate;
 
-public class RemoveDuplicatePredicate implements Predicate<Visit> {
+public class RemoveDuplicatePersonsPredicate implements Predicate<Visit> {
 
     public static final boolean DONT_INCLUDE_THIS_VISIT_IN_LIST = false;
     public static final boolean INCLUDE_THIS_VISIT_IN_LIST = true;
     private final ListProperty<Visit> list;
 
-    public RemoveDuplicatePredicate(ListProperty<Visit> list) {
+    public RemoveDuplicatePersonsPredicate(ListProperty<Visit> list) {
         this.list = list;
     }
 
