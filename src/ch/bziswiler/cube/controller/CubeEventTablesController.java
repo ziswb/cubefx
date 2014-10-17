@@ -91,12 +91,16 @@ public class CubeEventTablesController extends EventControllerScaffold {
 
     @FXML
     private void initialize() {
-        initializeTable(this.youthMembersTableFirstNameColumn, this.youthMembersTableLastNameColumn, this.youthMembersTableCheckInColumn, this.youthMembersTableCheckOutColumn);
+        initializeYouthMembersTable();
         initializeTable(this.youthStaffTableFirstNameColumn, this.youthStaffTableLastNameColumn, this.youthStaffTableCheckInColumn, this.youthStaffTableCheckOutColumn);
         initializeTable(this.driversTableFirstNameColumn, this.driversTableLastNameColumn, this.adultStaffTableCheckInColumn, this.adultStaffTableCheckOutColumn);
         initializeTable(this.adultStaffTableFirstNameColumn, this.adultStaffTableLastNameColumn, this.driversTableCheckInColumn, this.driversTableCheckOutColumn);
         initializeStatsTable(this.statsCityColumn, this.statsNumberColumn);
         initializeAccordion();
+    }
+
+    private void initializeYouthMembersTable() {
+        initializeTable(this.youthMembersTableFirstNameColumn, this.youthMembersTableLastNameColumn, this.youthMembersTableCheckInColumn, this.youthMembersTableCheckOutColumn);
     }
 
     private void initializeAccordion() {
@@ -147,14 +151,22 @@ public class CubeEventTablesController extends EventControllerScaffold {
     }
 
     private void initializeTable(TableColumn<Visit, String> column1, TableColumn<Visit, String> column2, TableColumn<Visit, LocalDateTime> column3, TableColumn<Visit, LocalDateTime> column4) {
-        column1.setCellFactory(new LabelCellFactory());
-        column2.setCellFactory(new LabelCellFactory());
-        column3.setCellFactory(new DateCellFactory());
-        column4.setCellFactory(new DateCellFactory());
+        setLabelFactory(column1);
+        setLabelFactory(column2);
+        setDateFactory(column3);
+        setDateFactory(column4);
         column1.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().firstNameProperty());
         column2.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().lastNameProperty());
         column3.setCellValueFactory(cellData -> cellData.getValue().checkInProperty());
         column4.setCellValueFactory(cellData -> cellData.getValue().checkOutProperty());
+    }
+
+    private void setDateFactory(TableColumn<Visit, LocalDateTime> column3) {
+        column3.setCellFactory(new DateCellFactory());
+    }
+
+    private void setLabelFactory(TableColumn<Visit, String> column1) {
+        column1.setCellFactory(new LabelCellFactory());
     }
 
     @Override

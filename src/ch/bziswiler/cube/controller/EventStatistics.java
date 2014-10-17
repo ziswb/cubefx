@@ -73,7 +73,7 @@ public class EventStatistics {
     }
 
     private int computeNumberOfAllMembers(ListProperty<Visit> visits) {
-        return visits.filtered(new RemoveDuplicatePredicate(visits)).size();
+        return visits.filtered(new RemoveDuplicatePersonsPredicate(visits)).size();
     }
 
     public void update() {
