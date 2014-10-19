@@ -1,10 +1,14 @@
 package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.model.address.City;
+import ch.bziswiler.cube.model.event.KeyValue;
 import ch.bziswiler.cube.model.event.Visit;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyListWrapper;
+import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 
 import java.util.HashMap;
@@ -27,9 +31,14 @@ public class EventStatistics {
     private ReadOnlyIntegerWrapper numberOfAllYouthStaffProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfAllAdultStaffProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfAllDriversProperty = new ReadOnlyIntegerWrapper();
+    private ReadOnlyListWrapper<KeyValue<String, Integer>> visitsDigest = new ReadOnlyListWrapper<>(FXCollections.observableArrayList());
 
     public EventStatistics(CubeEventModel model) {
         this.model = model;
+    }
+
+    public ReadOnlyListProperty<KeyValue<String, Integer>> visitsDigest() {
+        return visitsDigest.getReadOnlyProperty();
     }
 
     public ReadOnlyIntegerProperty numberOfPresentYouthMembersProperty() {
@@ -73,7 +82,11 @@ public class EventStatistics {
     }
 
     private int computeNumberOfAllMembers(ListProperty<Visit> visits) {
-        return visits.filtered(new RemoveDuplicatePersonsPredicate(visits)).size();
+        return computeAllMembers(visits).size();
+    }
+
+    private FilteredList<Visit> computeAllMembers(ListProperty<Visit> visits) {
+        return visits.filtered(new RemoveDuplicatePersonsPredicate(visits));
     }
 
     public void update() {
@@ -91,17 +104,13 @@ public class EventStatistics {
             numberOfPresentDriversProperty.set(computeNumberOfPresentMembers(getEvent().driverVisitsProperty()));
             numberOfAllDriversProperty.set(computeNumberOfAllMembers(getEvent().driverVisitsProperty()));
 
-            computeSomeThing();
+            computeVisitsDigest();
         }
     }
 
-    private void computeSomeThing() {
-        final FilteredList<Visit> youthMembers = getEvent().youthMemberVisitsProperty().filtered(visit -> {
-            return visit.checkOutProperty().isNotNull().get();
-        });
-        final FilteredList<Visit> youthStaff = getEvent().youthStaffVisitsProperty().filtered(visit -> {
-            return visit.checkOutProperty().isNotNull().get();
-        });
+    private void computeVisitsDigest() {
+        final FilteredList<Visit> youthMembers = computeAllMembers(getEvent().youthMemberVisitsProperty());
+        final FilteredList<Visit> youthStaff = computeAllMembers(getEvent().youthStaffVisitsProperty());
         final Map<City, Integer> map = new HashMap<>();
         for (Visit visit : youthMembers) {
             if (
@@ -117,7 +126,8 @@ public class EventStatistics {
             if (!map.containsKey(city)) {
                 map.put(city, 1);
             } else {
-                map.put(city, map.get(city) + 1);
+                final int value = map.get(city) + 1;
+                map.put(city, value);
             }
         }
         for (Visit visit : youthStaff) {
@@ -134,10 +144,14 @@ public class EventStatistics {
             if (!map.containsKey(city)) {
                 map.put(city, 1);
             } else {
-                map.put(city, map.get(city) + 1);
+                final int value = map.get(city) + 1;
+                map.put(city, value);
             }
         }
-
+        visitsDigest.clear();
+        for (Map.Entry<City, Integer> entry : map.entrySet()) {
+            visitsDigest.get().add(new KeyValue<>(entry.getKey().getName(), entry.getValue()));
+        }
     }
 
     private CubeEventModel getEvent() {

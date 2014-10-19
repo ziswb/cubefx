@@ -14,8 +14,8 @@
          <content>
             <TableView fx:id="statsTable" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="Ort" />
-                <TableColumn prefWidth="75.0" text="Anzahl" />
+                <TableColumn fx:id="statsCityColumn" prefWidth="75.0" text="Ort" />
+                <TableColumn fx:id="statsNumberColumn" prefWidth="75.0" text="Anzahl" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

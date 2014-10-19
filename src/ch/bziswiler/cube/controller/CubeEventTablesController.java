@@ -1,5 +1,6 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.event.KeyValue;
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.animation.PauseTransition;
@@ -19,7 +20,6 @@ import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.FormatStyle;
-import java.util.Map;
 
 import static java.time.format.DateTimeFormatter.ofLocalizedDateTime;
 
@@ -78,11 +78,11 @@ public class CubeEventTablesController extends EventControllerScaffold {
     @FXML
     private TitledPane statsPane;
     @FXML
-    private TableView<Person> statsTable;
+    private TableView<KeyValue<String, Integer>> statsTable;
     @FXML
-    private TableColumn<Map<String, Integer>, Integer> statsCityColumn;
+    private TableColumn<KeyValue<String, Integer>, String> statsCityColumn;
     @FXML
-    private TableColumn<Map<String, Integer>, Integer> statsNumberColumn;
+    private TableColumn<KeyValue<String, Integer>, Integer> statsNumberColumn;
 
     private PaneExpander youthMemberPaneExpander;
     private PaneExpander youthStaffPaneExpander;
@@ -92,15 +92,55 @@ public class CubeEventTablesController extends EventControllerScaffold {
     @FXML
     private void initialize() {
         initializeYouthMembersTable();
-        initializeTable(this.youthStaffTableFirstNameColumn, this.youthStaffTableLastNameColumn, this.youthStaffTableCheckInColumn, this.youthStaffTableCheckOutColumn);
-        initializeTable(this.driversTableFirstNameColumn, this.driversTableLastNameColumn, this.adultStaffTableCheckInColumn, this.adultStaffTableCheckOutColumn);
-        initializeTable(this.adultStaffTableFirstNameColumn, this.adultStaffTableLastNameColumn, this.driversTableCheckInColumn, this.driversTableCheckOutColumn);
-        initializeStatsTable(this.statsCityColumn, this.statsNumberColumn);
+        initializeYouthStaffTable();
+        initializeDriversTable();
+        initializeAdultStaffTable();
+        initializeStatsTable();
         initializeAccordion();
     }
 
+    private void initializeAdultStaffTable() {
+        setLabelFactory(this.adultStaffTableFirstNameColumn);
+        setLabelFactory(this.adultStaffTableLastNameColumn);
+        setDateFactory(this.driversTableCheckInColumn);
+        setDateFactory(this.driversTableCheckOutColumn);
+        setFirstNameCellValueFactory(this.adultStaffTableFirstNameColumn);
+        setLastNameCellValueFactory(this.adultStaffTableLastNameColumn);
+        setCheckInCellValueFactory(this.driversTableCheckInColumn);
+        setCheckOutCellValueFactory(this.driversTableCheckOutColumn);
+    }
+
+    private void initializeDriversTable() {
+        setLabelFactory(this.driversTableFirstNameColumn);
+        setLabelFactory(this.driversTableLastNameColumn);
+        setDateFactory(this.adultStaffTableCheckInColumn);
+        setDateFactory(this.adultStaffTableCheckOutColumn);
+        setFirstNameCellValueFactory(this.driversTableFirstNameColumn);
+        setLastNameCellValueFactory(this.driversTableLastNameColumn);
+        setCheckInCellValueFactory(this.adultStaffTableCheckInColumn);
+        setCheckOutCellValueFactory(this.adultStaffTableCheckOutColumn);
+    }
+
+    private void initializeYouthStaffTable() {
+        setLabelFactory(this.youthStaffTableFirstNameColumn);
+        setLabelFactory(this.youthStaffTableLastNameColumn);
+        setDateFactory(this.youthStaffTableCheckInColumn);
+        setDateFactory(this.youthStaffTableCheckOutColumn);
+        setFirstNameCellValueFactory(this.youthStaffTableFirstNameColumn);
+        setLastNameCellValueFactory(this.youthStaffTableLastNameColumn);
+        setCheckInCellValueFactory(this.youthStaffTableCheckInColumn);
+        setCheckOutCellValueFactory(this.youthStaffTableCheckOutColumn);
+    }
+
     private void initializeYouthMembersTable() {
-        initializeTable(this.youthMembersTableFirstNameColumn, this.youthMembersTableLastNameColumn, this.youthMembersTableCheckInColumn, this.youthMembersTableCheckOutColumn);
+        setLabelFactory(this.youthMembersTableFirstNameColumn);
+        setLabelFactory(this.youthMembersTableLastNameColumn);
+        setDateFactory(this.youthMembersTableCheckInColumn);
+        setDateFactory(this.youthMembersTableCheckOutColumn);
+        setFirstNameCellValueFactory(this.youthMembersTableFirstNameColumn);
+        setLastNameCellValueFactory(this.youthMembersTableLastNameColumn);
+        setCheckInCellValueFactory(this.youthMembersTableCheckInColumn);
+        setCheckOutCellValueFactory(this.youthMembersTableCheckOutColumn);
     }
 
     private void initializeAccordion() {
@@ -143,11 +183,12 @@ public class CubeEventTablesController extends EventControllerScaffold {
         this.youthStaffTable.setItems(youthStaffVisits);
         this.adultStaffTable.setItems(adultStaffVisits);
         this.driversTable.setItems(driverVisits);
+        this.statsTable.setItems(event.getStats().visitsDigest());
     }
 
-    private void initializeStatsTable(TableColumn<Map<String, Integer>, Integer> statsCityColumn, TableColumn<Map<String, Integer>, Integer> statsNumberColumn) {
-//        statsCityColumn.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().firstNameProperty());
-//        statsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().firstNameProperty());
+    private void initializeStatsTable() {
+        this.statsCityColumn.setCellValueFactory(cellData -> cellData.getValue().keyProperty());
+        this.statsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
     }
 
     private void initializeTable(TableColumn<Visit, String> column1, TableColumn<Visit, String> column2, TableColumn<Visit, LocalDateTime> column3, TableColumn<Visit, LocalDateTime> column4) {
@@ -155,18 +196,34 @@ public class CubeEventTablesController extends EventControllerScaffold {
         setLabelFactory(column2);
         setDateFactory(column3);
         setDateFactory(column4);
-        column1.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().firstNameProperty());
-        column2.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().lastNameProperty());
-        column3.setCellValueFactory(cellData -> cellData.getValue().checkInProperty());
-        column4.setCellValueFactory(cellData -> cellData.getValue().checkOutProperty());
+        setFirstNameCellValueFactory(column1);
+        setLastNameCellValueFactory(column2);
+        setCheckInCellValueFactory(column3);
+        setCheckOutCellValueFactory(column4);
     }
 
-    private void setDateFactory(TableColumn<Visit, LocalDateTime> column3) {
-        column3.setCellFactory(new DateCellFactory());
+    private void setCheckOutCellValueFactory(TableColumn<Visit, LocalDateTime> column) {
+        column.setCellValueFactory(cellData -> cellData.getValue().checkOutProperty());
     }
 
-    private void setLabelFactory(TableColumn<Visit, String> column1) {
-        column1.setCellFactory(new LabelCellFactory());
+    private void setCheckInCellValueFactory(TableColumn<Visit, LocalDateTime> column) {
+        column.setCellValueFactory(cellData -> cellData.getValue().checkInProperty());
+    }
+
+    private void setLastNameCellValueFactory(TableColumn<Visit, String> column) {
+        column.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().lastNameProperty());
+    }
+
+    private void setFirstNameCellValueFactory(TableColumn<Visit, String> column) {
+        column.setCellValueFactory(cellData -> cellData.getValue().personProperty().get().firstNameProperty());
+    }
+
+    private void setDateFactory(TableColumn<Visit, LocalDateTime> column) {
+        column.setCellFactory(new DateCellFactory());
+    }
+
+    private void setLabelFactory(TableColumn<Visit, String> column) {
+        column.setCellFactory(new LabelCellFactory());
     }
 
     @Override
