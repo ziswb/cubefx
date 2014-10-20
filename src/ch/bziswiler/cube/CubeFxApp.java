@@ -5,11 +5,10 @@ import ch.bziswiler.cube.controller.EventControllerScaffold;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -24,7 +23,7 @@ public class CubeFxApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        HBox root = (HBox) FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
+        HBox root = FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
         VBox scan = (VBox) loadResourceAndEventController("view/cubeScanMemberLayout.fxml");
         VBox overview = (VBox) loadResourceAndEventController("view/cubeEventOverviewLayout.fxml");
         HBox.setHgrow(scan, Priority.NEVER);
@@ -40,9 +39,9 @@ public class CubeFxApp extends Application {
         root.getChildren().add(0, scan);
         root.getChildren().add(1, overview);
 
-        AnchorPane duration = (AnchorPane) loadResourceAndEventController("view/cubeEventDurationLayout.fxml");
-        AnchorPane numbers = (AnchorPane) loadResourceAndEventController("view/cubeEventNumbersLayout.fxml");
-        Accordion tables = (Accordion) loadResourceAndEventController("view/cubeEventTablesLayout.fxml");
+        Region duration = (Region) loadResourceAndEventController("view/cubeEventDurationLayout.fxml");
+        Region numbers = (Region) loadResourceAndEventController("view/cubeEventNumbersLayout.fxml");
+        Region tables = (Region) loadResourceAndEventController("view/cubeEventTablesLayout.fxml");
 
         VBox.setVgrow(duration, Priority.NEVER);
         VBox.setVgrow(numbers, Priority.NEVER);

@@ -1,9 +1,12 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.event.KeyValue;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 public class CubeEventNumbersController extends EventControllerScaffold {
 
@@ -19,6 +22,12 @@ public class CubeEventNumbersController extends EventControllerScaffold {
     private Label numberOfAllAdults;
     @FXML
     private Label totalNumberOfAllPersons;
+    @FXML
+    private TableView<KeyValue<String, Integer>> statsTable;
+    @FXML
+    private TableColumn<KeyValue<String, Integer>, String> statsCityColumn;
+    @FXML
+    private TableColumn<KeyValue<String, Integer>, Integer> statsNumberColumn;
 
     private ReadOnlyIntegerWrapper numberOfPresentYouthMembersProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfPresentYouthStaffProperty = new ReadOnlyIntegerWrapper();
@@ -51,8 +60,14 @@ public class CubeEventNumbersController extends EventControllerScaffold {
 
         final NumberBinding totalNumberOfAllPersonsBinding = numberOfAllYouthMembersBinding.add(numberOfAllAdultsBinding);
         this.totalNumberOfAllPersons.textProperty().bind(totalNumberOfAllPersonsBinding.asString());
+
+        initializeStatsTable();
     }
 
+    private void initializeStatsTable() {
+        this.statsCityColumn.setCellValueFactory(cellData -> cellData.getValue().keyProperty());
+        this.statsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+    }
 
     @Override
     protected void initialize(CubeEventModel newValue) {
@@ -65,12 +80,11 @@ public class CubeEventNumbersController extends EventControllerScaffold {
         this.numberOfPresentDriversProperty.bind(stats.numberOfPresentDriversProperty());
         this.numberOfAllAdultStaffProperty.bind(stats.numberOfAllAdultStaffProperty());
         this.numberOfAllDriversProperty.bind(stats.numberOfAllDriversProperty());
+        this.statsTable.setItems(stats.visitsDigest());
     }
 
     @Override
     protected void dispose(CubeEventModel oldValue) {
-        System.out.println("oldValue = " + oldValue);
-        final EventStatistics stats = oldValue.getStats();
         this.numberOfPresentYouthMembersProperty.unbind();
         this.numberOfPresentYouthStaffProperty.unbind();
         this.numberOfAllYouthMembersProperty.unbind();

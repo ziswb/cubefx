@@ -1,13 +1,9 @@
 package ch.bziswiler.cube.controller;
 
-import ch.bziswiler.cube.model.event.KeyValue;
 import ch.bziswiler.cube.model.event.Visit;
-import ch.bziswiler.cube.model.person.Person;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Label;
@@ -75,14 +71,6 @@ public class CubeEventTablesController extends EventControllerScaffold {
     private TableColumn<Visit, LocalDateTime> driversTableCheckInColumn;
     @FXML
     private TableColumn<Visit, LocalDateTime> driversTableCheckOutColumn;
-    @FXML
-    private TitledPane statsPane;
-    @FXML
-    private TableView<KeyValue<String, Integer>> statsTable;
-    @FXML
-    private TableColumn<KeyValue<String, Integer>, String> statsCityColumn;
-    @FXML
-    private TableColumn<KeyValue<String, Integer>, Integer> statsNumberColumn;
 
     private PaneExpander youthMemberPaneExpander;
     private PaneExpander youthStaffPaneExpander;
@@ -95,7 +83,6 @@ public class CubeEventTablesController extends EventControllerScaffold {
         initializeYouthStaffTable();
         initializeDriversTable();
         initializeAdultStaffTable();
-        initializeStatsTable();
         initializeAccordion();
     }
 
@@ -148,19 +135,11 @@ public class CubeEventTablesController extends EventControllerScaffold {
         firstPane.setCollapsible(false);
         firstPane.setExpanded(true);
         this.accordion.setExpandedPane(firstPane);
-        this.accordion.expandedPaneProperty().addListener(new ChangeListener<TitledPane>() {
-            @Override
-            public void changed(ObservableValue<? extends TitledPane> observable, TitledPane oldPane, TitledPane newPane) {
-                if (oldPane != null) {
-                    oldPane.setCollapsible(true);
-                }
-                if (newPane != null) Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        newPane.setCollapsible(false);
-                    }
-                });
+        this.accordion.expandedPaneProperty().addListener((observable, oldPane, newPane) -> {
+            if (oldPane != null) {
+                oldPane.setCollapsible(true);
             }
+            if (newPane != null) Platform.runLater(() -> newPane.setCollapsible(false));
         });
         youthMemberPaneExpander = new PaneExpander(youthMembersPane, accordion);
         youthStaffPaneExpander = new PaneExpander(youthStaffPane, accordion);
@@ -183,23 +162,6 @@ public class CubeEventTablesController extends EventControllerScaffold {
         this.youthStaffTable.setItems(youthStaffVisits);
         this.adultStaffTable.setItems(adultStaffVisits);
         this.driversTable.setItems(driverVisits);
-        this.statsTable.setItems(event.getStats().visitsDigest());
-    }
-
-    private void initializeStatsTable() {
-        this.statsCityColumn.setCellValueFactory(cellData -> cellData.getValue().keyProperty());
-        this.statsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
-    }
-
-    private void initializeTable(TableColumn<Visit, String> column1, TableColumn<Visit, String> column2, TableColumn<Visit, LocalDateTime> column3, TableColumn<Visit, LocalDateTime> column4) {
-        setLabelFactory(column1);
-        setLabelFactory(column2);
-        setDateFactory(column3);
-        setDateFactory(column4);
-        setFirstNameCellValueFactory(column1);
-        setLastNameCellValueFactory(column2);
-        setCheckInCellValueFactory(column3);
-        setCheckOutCellValueFactory(column4);
     }
 
     private void setCheckOutCellValueFactory(TableColumn<Visit, LocalDateTime> column) {
@@ -253,9 +215,7 @@ public class CubeEventTablesController extends EventControllerScaffold {
                         PauseTransition agingTime = new PauseTransition(timeToGetOld);
                         agingTime.setCycleCount(1);
                         agingTime.play();
-                        agingTime.setOnFinished(event -> {
-                            getStyleClass().remove("new");
-                        });
+                        agingTime.setOnFinished(event -> getStyleClass().remove("new"));
                     }
                 }
             };
@@ -284,9 +244,7 @@ public class CubeEventTablesController extends EventControllerScaffold {
                         PauseTransition agingTime = new PauseTransition(timeToGetOld);
                         agingTime.setCycleCount(1);
                         agingTime.play();
-                        agingTime.setOnFinished(event -> {
-                            getStyleClass().remove("new");
-                        });
+                        agingTime.setOnFinished(event -> getStyleClass().remove("new"));
                     }
                 }
             };

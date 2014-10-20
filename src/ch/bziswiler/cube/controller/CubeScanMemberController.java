@@ -8,8 +8,6 @@ import ch.bziswiler.cube.model.person.IntegerPersonId;
 import ch.bziswiler.cube.model.person.Person;
 import ch.bziswiler.cube.model.person.PersonId;
 import com.google.common.collect.Lists;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -19,8 +17,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
-
-import java.util.function.Predicate;
 
 public class CubeScanMemberController extends EventControllerScaffold {
 
@@ -95,40 +91,34 @@ public class CubeScanMemberController extends EventControllerScaffold {
 
             @Override
             public Person fromString(String personString) {
-                final FilteredList<Person> filtered = personData.filtered(new Predicate<Person>() {
-                    @Override
-                    public boolean test(Person person) {
-                        final PersonId personId = person.getPersonId();
-                        if (personId != null) {
-                            try {
-                                return personId.equals(IntegerPersonId.fromString(personString));
-                            } catch (Exception e) {
-                                // nop
-                            }
+                final FilteredList<Person> filtered = personData.filtered(person -> {
+                    final PersonId personId = person.getPersonId();
+                    if (personId != null) {
+                        try {
+                            return personId.equals(IntegerPersonId.fromString(personString));
+                        } catch (Exception e) {
+                            // nop
                         }
-                        return false;
                     }
+                    return false;
                 });
                 return filtered.size() == 1 ? filtered.get(0) : null;
             }
         });
-        this.personCombo.valueProperty().addListener(new ChangeListener<Person>() {
-            @Override
-            public void changed(ObservableValue observable, Person oldValue, Person newValue) {
-                if (oldValue != null && newValue == null) {
-                    personCombo.setValue(oldValue);
-                }
+        this.personCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue != null && newValue == null) {
+                personCombo.setValue(oldValue);
             }
         });
     }
 
     private void createBindings() {
         getModel().selectedPersonProperty().bind(this.personCombo.getSelectionModel().selectedItemProperty());
-        addDriverButton.disableProperty().bind(getModel().addDriverButtonEnabledProperty());
-        addAdultStaffButton.disableProperty().bind(getModel().addAdultStaffButtonEnabledProperty());
-        addYouthMemberButton.disableProperty().bind(getModel().addYouthMemberButtonEnabledProperty());
-        addYouthStaffButton.disableProperty().bind(getModel().addYouthStaffButtonEnabledProperty());
-        checkOutButton.disableProperty().bind(getModel().checkOutButtonEnabledProperty());
+        addDriverButton.disableProperty().bind(getModel().addDriverButtonDisabledProperty());
+        addAdultStaffButton.disableProperty().bind(getModel().addAdultStaffButtonDisabledProperty());
+        addYouthMemberButton.disableProperty().bind(getModel().addYouthMemberButtonDisabledProperty());
+        addYouthStaffButton.disableProperty().bind(getModel().addYouthStaffButtonDisabledProperty());
+        checkOutButton.disableProperty().bind(getModel().checkOutButtonDisabledProperty());
         portrait.imageProperty().bind(getModel().portraitImageProperty());
         nameLabel.textProperty().bind(getModel().selectedPersonNameProperty());
     }

@@ -19,9 +19,7 @@ public class EventStatistics {
 
     private final CubeEventModel model;
 
-    private final Predicate<Visit> presentMembersPredicate = visit -> {
-        return visit.checkOutProperty().isNull().get();
-    };
+    private final Predicate<Visit> presentMembersPredicate = visit -> visit.checkOutProperty().isNull().get();
 
     private ReadOnlyIntegerWrapper numberOfPresentYouthMembersProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfPresentYouthStaffProperty = new ReadOnlyIntegerWrapper();
@@ -43,10 +41,6 @@ public class EventStatistics {
 
     public ReadOnlyIntegerProperty numberOfPresentYouthMembersProperty() {
         return numberOfPresentYouthMembersProperty.getReadOnlyProperty();
-    }
-
-    public final Integer numberOfPresentYouthMembers() {
-        return numberOfPresentYouthMembersProperty.get();
     }
 
     public ReadOnlyIntegerProperty numberOfAllYouthMembersProperty() {
@@ -112,46 +106,43 @@ public class EventStatistics {
         final FilteredList<Visit> youthMembers = computeAllMembers(getEvent().youthMemberVisitsProperty());
         final FilteredList<Visit> youthStaff = computeAllMembers(getEvent().youthStaffVisitsProperty());
         final Map<City, Integer> map = new HashMap<>();
-        for (Visit visit : youthMembers) {
-            if (
-                    visit.personProperty().isNull().or(
-                            visit.personProperty().get().addressProperty().isNull().or(
-                                    visit.personProperty().get().addressProperty().get().cityProperty().isNull()
-                            )
-                    ).get()
-                    ) {
-                continue;
-            }
-            final City city = visit.personProperty().get().addressProperty().get().getCity();
-            if (!map.containsKey(city)) {
-                map.put(city, 1);
-            } else {
-                final int value = map.get(city) + 1;
-                map.put(city, value);
-            }
-        }
-        for (Visit visit : youthStaff) {
-            if (
-                    visit.personProperty().isNull().or(
-                            visit.personProperty().get().addressProperty().isNull().or(
-                                    visit.personProperty().get().addressProperty().get().cityProperty().isNull()
-                            )
-                    ).get()
-                    ) {
-                continue;
-            }
-            final City city = visit.personProperty().get().addressProperty().get().getCity();
-            if (!map.containsKey(city)) {
-                map.put(city, 1);
-            } else {
-                final int value = map.get(city) + 1;
-                map.put(city, value);
-            }
-        }
+        countMembersPerCity(youthMembers, map);
+        countMembersPerCity(youthStaff, map);
+        updateDigest(map);
+    }
+
+    private void updateDigest(Map<City, Integer> map) {
         visitsDigest.clear();
         for (Map.Entry<City, Integer> entry : map.entrySet()) {
             visitsDigest.get().add(new KeyValue<>(entry.getKey().getName(), entry.getValue()));
         }
+    }
+
+    private void countMembersPerCity(FilteredList<Visit> visits, Map<City, Integer> map) {
+        for (Visit visit : visits) {
+            if (hasNoCity(visit)) {
+                continue;
+            }
+            final City city = visit.personProperty().get().addressProperty().get().getCity();
+            increaseCounter(map, city);
+        }
+    }
+
+    private void increaseCounter(Map<City, Integer> map, City city) {
+        if (!map.containsKey(city)) {
+            map.put(city, 1);
+        } else {
+            final int value = map.get(city) + 1;
+            map.put(city, value);
+        }
+    }
+
+    private boolean hasNoCity(Visit visit) {
+        return visit.personProperty().isNull().or(
+                visit.personProperty().get().addressProperty().isNull().or(
+                        visit.personProperty().get().addressProperty().get().cityProperty().isNull()
+                )
+        ).get();
     }
 
     private CubeEventModel getEvent() {

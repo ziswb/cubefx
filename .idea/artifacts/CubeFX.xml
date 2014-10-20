@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/CubeFX</output-path>
     <properties id="javafx-properties">
       <options>
-        <option name="appClass" value="ch.bziswiler.cube.person.CubeApp" />
+        <option name="appClass" value="ch.bziswiler.cube.CubeFxApp" />
         <option name="description" value="" />
         <option name="height" value="768" />
         <option name="htmlParamFile" value="" />
