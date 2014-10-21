@@ -14,11 +14,8 @@ public class PersonMetaDataDecorator implements Decorator<Person> {
     private ListProperty<PersonRole> assignableRoles;
     private SimpleObjectProperty<PersonRole> currentRole;
 
-    public ListProperty<PersonRole> assignableRolesProperty() {
-        if (this.assignableRoles == null) {
-            this.assignableRoles = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.assignableRoles;
+    public final PersonRole getCurrentRole() {
+        return currentRoleProperty().get();
     }
 
     public SimpleObjectProperty<PersonRole> currentRoleProperty() {
@@ -28,16 +25,19 @@ public class PersonMetaDataDecorator implements Decorator<Person> {
         return this.currentRole;
     }
 
-    public final PersonRole getCurrentRole() {
-        return currentRoleProperty().get();
-    }
-
     public final void setCurrentRole(PersonRole role) {
         currentRoleProperty().set(role);
     }
 
     public final Collection<PersonRole> getAssignableRoles() {
         return assignableRolesProperty().get();
+    }
+
+    public ListProperty<PersonRole> assignableRolesProperty() {
+        if (this.assignableRoles == null) {
+            this.assignableRoles = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.assignableRoles;
     }
 
     public final void setAssignableRoles(Collection<PersonRole> assignableRoles) {

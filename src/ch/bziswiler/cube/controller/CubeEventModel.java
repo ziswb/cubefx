@@ -31,16 +31,11 @@ import java.util.concurrent.Callable;
 
 public class CubeEventModel {
 
-    // Event Duration View
+    private final EventStatistics stats;
     private ObjectProperty<LocalDateTime> start;
     private ObjectProperty<LocalDateTime> end;
     private StringBinding durationBinding;
     private ObjectProperty<Address> address;
-
-    // Event Numbers View
-    // -> see EventStatistics
-
-    // Scan Member View
     private ReadOnlyBooleanWrapper addYouthMemberButtonDisabled;
     private ReadOnlyBooleanWrapper addYouthStaffButtonDisabled;
     private ReadOnlyBooleanWrapper addAdultStaffButtonDisabled;
@@ -53,17 +48,14 @@ public class CubeEventModel {
     private ReadOnlyStringWrapper selectedPersonCity;
     private ReadOnlyStringWrapper selectedPersonBirthDate;
     private ReadOnlyObjectWrapper<Image> portraitImage;
-
-    // Table View
     private ListProperty<Visit> youthMemberVisits;
     private ListProperty<Visit> youthStaffVisits;
     private ListProperty<Visit> adultStaffVisits;
     private ListProperty<Visit> driverVisits;
     private ReadOnlyObjectWrapper<Pane> expandedPane;
-
     private ObjectProperty<Event> event;
     private ChangeListener<Event> eventListChangeListener;
-    private final EventStatistics stats;
+    private Callable<String> durationFunc = () -> "Not yet implemented";
 
     public CubeEventModel() {
         this.eventListChangeListener = (observable, oldValue, newValue) -> eventChanged(newValue, oldValue);
@@ -72,31 +64,58 @@ public class CubeEventModel {
         this.stats = new EventStatistics(this);
     }
 
-    // Event Duration View
-
-    private Callable<String> durationFunc = () -> "Not yet implemented";
-
-    public StringBinding durationBinding() {
-        if (durationBinding == null) {
-            this.durationBinding = null;
-            this.durationBinding = Bindings.createStringBinding(durationFunc, startProperty(), endProperty());
+    protected void eventChanged(Event newValue, Event oldValue) {
+        if (oldValue != null) {
+            Bindings.unbindBidirectional(oldValue.driverVisitsProperty(), driverVisitsProperty());
+            Bindings.unbindBidirectional(oldValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
+            Bindings.unbindBidirectional(oldValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
+            Bindings.unbindBidirectional(oldValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
+            Bindings.unbindBidirectional(oldValue.addressProperty(), addressProperty());
         }
-        return this.durationBinding;
+        if (newValue != null) {
+            Bindings.bindBidirectional(newValue.driverVisitsProperty(), driverVisitsProperty());
+            Bindings.bindBidirectional(newValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
+            Bindings.bindBidirectional(newValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
+            Bindings.bindBidirectional(newValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
+            Bindings.bindBidirectional(newValue.addressProperty(), addressProperty());
+        }
     }
 
+    public ObjectProperty<Event> eventProperty() {
 
-    public ObjectProperty<LocalDateTime> startProperty() {
-        if (this.start == null) {
-            this.start = new SimpleObjectProperty<>();
+        if (this.event == null) {
+            this.event = new SimpleObjectProperty<>();
+            this.event.addListener(eventListChangeListener);
         }
-        return this.start;
+        return this.event;
     }
 
-    public ObjectProperty<LocalDateTime> endProperty() {
-        if (this.end == null) {
-            this.end = new SimpleObjectProperty<>();
+    public ListProperty<Visit> driverVisitsProperty() {
+        if (this.driverVisits == null) {
+            this.driverVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
         }
-        return this.end;
+        return this.driverVisits;
+    }
+
+    public ListProperty<Visit> adultStaffVisitsProperty() {
+        if (this.adultStaffVisits == null) {
+            this.adultStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.adultStaffVisits;
+    }
+
+    public ListProperty<Visit> youthMemberVisitsProperty() {
+        if (this.youthMemberVisits == null) {
+            this.youthMemberVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.youthMemberVisits;
+    }
+
+    public ListProperty<Visit> youthStaffVisitsProperty() {
+        if (this.youthStaffVisits == null) {
+            this.youthStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.youthStaffVisits;
     }
 
     public ObjectProperty<Address> addressProperty() {
@@ -118,110 +137,30 @@ public class CubeEventModel {
         return durationBinding();
     }
 
-    // Event Numbers View
-
-    // Scan Member View
-
-    public ReadOnlyBooleanProperty addYouthMemberButtonDisabledProperty() {
-        return addYouthMemberButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addYouthMemberButtonDisabledWrapper() {
-        if (this.addYouthMemberButtonDisabled == null) {
-            this.addYouthMemberButtonDisabled = new ReadOnlyBooleanWrapper(true);
+    public StringBinding durationBinding() {
+        if (durationBinding == null) {
+            this.durationBinding = null;
+            this.durationBinding = Bindings.createStringBinding(durationFunc, startProperty(), endProperty());
         }
-        return this.addYouthMemberButtonDisabled;
+        return this.durationBinding;
     }
 
-    public ReadOnlyBooleanProperty addYouthStaffButtonDisabledProperty() {
-        return addYouthStaffButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addYouthStaffButtonDisabledWrapper() {
-        if (this.addYouthStaffButtonDisabled == null) {
-            this.addYouthStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+    public ObjectProperty<LocalDateTime> startProperty() {
+        if (this.start == null) {
+            this.start = new SimpleObjectProperty<>();
         }
-        return this.addYouthStaffButtonDisabled;
+        return this.start;
     }
 
-    public ReadOnlyBooleanProperty addAdultStaffButtonDisabledProperty() {
-        return this.addAdultStaffButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addAdultStaffButtonDisabledWrapper() {
-        if (this.addAdultStaffButtonDisabled == null) {
-            this.addAdultStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+    public ObjectProperty<LocalDateTime> endProperty() {
+        if (this.end == null) {
+            this.end = new SimpleObjectProperty<>();
         }
-        return this.addAdultStaffButtonDisabled;
+        return this.end;
     }
 
-    public ReadOnlyBooleanProperty addDriverButtonDisabledProperty() {
-        return this.addDriverButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addDriverButtonDisabledWrapper() {
-        if (this.addDriverButtonDisabled == null) {
-            this.addDriverButtonDisabled = new ReadOnlyBooleanWrapper(true);
-        }
-        return this.addDriverButtonDisabled;
-    }
-
-    public ReadOnlyBooleanProperty checkOutButtonDisabledProperty() {
-        return this.checkOutButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper checkOutButtonDisabledWrapper() {
-        if (this.checkOutButtonDisabled == null) {
-            this.checkOutButtonDisabled = new ReadOnlyBooleanWrapper(true);
-        }
-        return this.checkOutButtonDisabled;
-    }
-
-    public ListProperty<Person> personsProperty() {
-        if (this.persons == null) {
-            this.persons = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.persons;
-    }
-
-    public ObjectProperty<Person> selectedPersonProperty() {
-        if (this.selectedPerson == null) {
-            this.selectedPerson = new SimpleObjectProperty<>();
-            this.selectedPerson.addListener((observable, oldValue, newValue) -> updatePersonDetails(newValue));
-        }
-        return this.selectedPerson;
-    }
-
-    public ReadOnlyStringProperty selectedPersonNameProperty() {
-        return selectedPersonNameWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyStringWrapper selectedPersonNameWrapper() {
-        if (this.selectedPersonName == null) {
-            this.selectedPersonName = new ReadOnlyStringWrapper();
-        }
-        return this.selectedPersonName;
-    }
-
-    public ReadOnlyStringProperty selectedPersonStreetProperty() {
-        if (this.selectedPersonStreet == null) {
-            this.selectedPersonStreet = new ReadOnlyStringWrapper();
-        }
-        return this.selectedPersonStreet.getReadOnlyProperty();
-    }
-
-    public ReadOnlyStringProperty selectedPersonCityProperty() {
-        if (this.selectedPersonCity == null) {
-            this.selectedPersonCity = new ReadOnlyStringWrapper();
-        }
-        return this.selectedPersonCity.getReadOnlyProperty();
-    }
-
-    public ReadOnlyStringProperty selectedPersonBirthDateProperty() {
-        if (this.selectedPersonBirthDate == null) {
-            this.selectedPersonBirthDate = new ReadOnlyStringWrapper();
-        }
-        return this.selectedPersonBirthDate.getReadOnlyProperty();
+    public final Image getPortraitImage() {
+        return portraitImageProperty().get();
     }
 
     public ReadOnlyObjectProperty<Image> portraitImageProperty() {
@@ -235,11 +174,9 @@ public class CubeEventModel {
         return this.portraitImage;
     }
 
-    public final Image getPortraitImage() {
-        return portraitImageProperty().get();
+    public final Pane getExpandedPane() {
+        return expandedPaneProperty().get();
     }
-
-    // Table View
 
     public ReadOnlyObjectProperty<Pane> expandedPaneProperty() {
         return expandedPaneWrapper().getReadOnlyProperty();
@@ -250,38 +187,6 @@ public class CubeEventModel {
             this.expandedPane = new ReadOnlyObjectWrapper<>();
         }
         return this.expandedPane;
-    }
-
-    public ListProperty<Visit> youthMemberVisitsProperty() {
-        if (this.youthMemberVisits == null) {
-            this.youthMemberVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.youthMemberVisits;
-    }
-
-    public ListProperty<Visit> youthStaffVisitsProperty() {
-        if (this.youthStaffVisits == null) {
-            this.youthStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.youthStaffVisits;
-    }
-
-    public ListProperty<Visit> adultStaffVisitsProperty() {
-        if (this.adultStaffVisits == null) {
-            this.adultStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.adultStaffVisits;
-    }
-
-    public ListProperty<Visit> driverVisitsProperty() {
-        if (this.driverVisits == null) {
-            this.driverVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.driverVisits;
-    }
-
-    public final Pane getExpandedPane() {
-        return expandedPaneProperty().get();
     }
 
     public final List<Visit> getYouthMemberVisits() {
@@ -320,91 +225,88 @@ public class CubeEventModel {
         return addYouthMemberButtonDisabledProperty().get();
     }
 
+    public ReadOnlyBooleanProperty addYouthMemberButtonDisabledProperty() {
+        return addYouthMemberButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addYouthMemberButtonDisabledWrapper() {
+        if (this.addYouthMemberButtonDisabled == null) {
+            this.addYouthMemberButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        }
+        return this.addYouthMemberButtonDisabled;
+    }
+
     public final Boolean getAddYouthStaffButtonDisabled() {
         return addYouthStaffButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty addYouthStaffButtonDisabledProperty() {
+        return addYouthStaffButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addYouthStaffButtonDisabledWrapper() {
+        if (this.addYouthStaffButtonDisabled == null) {
+            this.addYouthStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        }
+        return this.addYouthStaffButtonDisabled;
     }
 
     public final Boolean getAddAdultStaffButtonDisabled() {
         return addAdultStaffButtonDisabledProperty().get();
     }
 
+    public ReadOnlyBooleanProperty addAdultStaffButtonDisabledProperty() {
+        return this.addAdultStaffButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addAdultStaffButtonDisabledWrapper() {
+        if (this.addAdultStaffButtonDisabled == null) {
+            this.addAdultStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        }
+        return this.addAdultStaffButtonDisabled;
+    }
+
     public final Boolean getAddDriverButtonDisabled() {
         return addDriverButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty addDriverButtonDisabledProperty() {
+        return this.addDriverButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addDriverButtonDisabledWrapper() {
+        if (this.addDriverButtonDisabled == null) {
+            this.addDriverButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        }
+        return this.addDriverButtonDisabled;
     }
 
     public final Boolean getCheckOutButtonDisabled() {
         return checkOutButtonDisabledProperty().get();
     }
 
+    public ReadOnlyBooleanProperty checkOutButtonDisabledProperty() {
+        return this.checkOutButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper checkOutButtonDisabledWrapper() {
+        if (this.checkOutButtonDisabled == null) {
+            this.checkOutButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        }
+        return this.checkOutButtonDisabled;
+    }
+
     public final Person getSelectedPerson() {
         return selectedPersonProperty().get();
     }
 
-    public final String getSelectedPersonName() {
-        return selectedPersonNameProperty().get();
-    }
-
-    public final String getSelectedPersonStreet() {
-        return selectedPersonStreetProperty().get();
-    }
-
-    public final String getSelectedPersonCity() {
-        return selectedPersonCityProperty().get();
-    }
-
-    public final String getSelectedPersonBirthDate() {
-        return selectedPersonBirthDateProperty().get();
-    }
-
-    public final List<Person> getPersons() {
-        return personsProperty().get();
-    }
-
-    public final void setPersons(List<Person> persons) {
-        personsProperty().addAll(persons);
-    }
-
-    public final EventStatistics getStats() {
-        return this.stats;
-    }
-
-    // Cube Event Model
-
-    public ObjectProperty<Event> eventProperty() {
-
-        if (this.event == null) {
-            this.event = new SimpleObjectProperty<>();
-            this.event.addListener(eventListChangeListener);
+    public ObjectProperty<Person> selectedPersonProperty() {
+        if (this.selectedPerson == null) {
+            this.selectedPerson = new SimpleObjectProperty<>();
+            this.selectedPerson.addListener((observable, oldValue, newValue) -> updatePersonDetails(newValue));
         }
-        return this.event;
+        return this.selectedPerson;
     }
-
-    public final Event getEvent() {
-        return eventProperty().get();
-    }
-
-    public final void setEvent(Event event) {
-        eventProperty().set(event);
-    }
-
-    protected void eventChanged(Event newValue, Event oldValue) {
-        if (oldValue != null) {
-            Bindings.unbindBidirectional(oldValue.driverVisitsProperty(), driverVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.addressProperty(), addressProperty());
-        }
-        if (newValue != null) {
-            Bindings.bindBidirectional(newValue.driverVisitsProperty(), driverVisitsProperty());
-            Bindings.bindBidirectional(newValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
-            Bindings.bindBidirectional(newValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
-            Bindings.bindBidirectional(newValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
-            Bindings.bindBidirectional(newValue.addressProperty(), addressProperty());
-        }
-    }
-
-    // Logic
 
     private void updatePersonDetails(Person selectedPerson) {
         updateButtonEnablement(selectedPerson);
@@ -413,28 +315,6 @@ public class CubeEventModel {
         }
         updateNameLabel(selectedPerson);
         updatePortrait(selectedPerson);
-    }
-
-    private void disableAllButtons() {
-        this.addYouthMemberButtonDisabledWrapper().set(true);
-        this.addYouthStaffButtonDisabledWrapper().set(true);
-        this.addAdultStaffButtonDisabledWrapper().set(true);
-        this.addDriverButtonDisabledWrapper().set(true);
-        this.checkOutButtonDisabledWrapper().set(true);
-    }
-
-    private void updateNameLabel(Person selectedPerson) {
-        this.selectedPersonNameWrapper().set(selectedPerson.getFirstName() + " " + selectedPerson.getLastName());
-    }
-
-    private void updatePortrait(Person selectedPerson) {
-        if ("Muster".equalsIgnoreCase(selectedPerson.getLastName())) {
-            portraitImageWrapper().set(new Image("/resources/images/IMG_1056.jpg"));
-        } else if (Person.Gender.MALE == selectedPerson.getGender()) {
-            portraitImageWrapper().set(new Image("/resources/images/64Px_Portrait_Man.png"));
-        } else if (Person.Gender.FEMALE == selectedPerson.getGender()) {
-            portraitImageWrapper().set(new Image("/resources/images/64Px_Portrait_Woman.png"));
-        }
     }
 
     private void updateButtonEnablement(Person selectedPerson) {
@@ -462,6 +342,103 @@ public class CubeEventModel {
                 addDriverButtonDisabledWrapper().set(false);
             }
         }
+    }
+
+    private void updateNameLabel(Person selectedPerson) {
+        this.selectedPersonNameWrapper().set(selectedPerson.getFirstName() + " " + selectedPerson.getLastName());
+    }
+
+    private void updatePortrait(Person selectedPerson) {
+        if ("Muster".equalsIgnoreCase(selectedPerson.getLastName())) {
+            portraitImageWrapper().set(new Image("/resources/images/IMG_1056.jpg"));
+        } else if (Person.Gender.MALE == selectedPerson.getGender()) {
+            portraitImageWrapper().set(new Image("/resources/images/64Px_Portrait_Man.png"));
+        } else if (Person.Gender.FEMALE == selectedPerson.getGender()) {
+            portraitImageWrapper().set(new Image("/resources/images/64Px_Portrait_Woman.png"));
+        }
+    }
+
+    private void disableAllButtons() {
+        this.addYouthMemberButtonDisabledWrapper().set(true);
+        this.addYouthStaffButtonDisabledWrapper().set(true);
+        this.addAdultStaffButtonDisabledWrapper().set(true);
+        this.addDriverButtonDisabledWrapper().set(true);
+        this.checkOutButtonDisabledWrapper().set(true);
+    }
+
+    private ReadOnlyStringWrapper selectedPersonNameWrapper() {
+        if (this.selectedPersonName == null) {
+            this.selectedPersonName = new ReadOnlyStringWrapper();
+        }
+        return this.selectedPersonName;
+    }
+
+    public final String getSelectedPersonName() {
+        return selectedPersonNameProperty().get();
+    }
+
+    public ReadOnlyStringProperty selectedPersonNameProperty() {
+        return selectedPersonNameWrapper().getReadOnlyProperty();
+    }
+
+    public final String getSelectedPersonStreet() {
+        return selectedPersonStreetProperty().get();
+    }
+
+    public ReadOnlyStringProperty selectedPersonStreetProperty() {
+        if (this.selectedPersonStreet == null) {
+            this.selectedPersonStreet = new ReadOnlyStringWrapper();
+        }
+        return this.selectedPersonStreet.getReadOnlyProperty();
+    }
+
+    public final String getSelectedPersonCity() {
+        return selectedPersonCityProperty().get();
+    }
+
+    public ReadOnlyStringProperty selectedPersonCityProperty() {
+        if (this.selectedPersonCity == null) {
+            this.selectedPersonCity = new ReadOnlyStringWrapper();
+        }
+        return this.selectedPersonCity.getReadOnlyProperty();
+    }
+
+    public final String getSelectedPersonBirthDate() {
+        return selectedPersonBirthDateProperty().get();
+    }
+
+    public ReadOnlyStringProperty selectedPersonBirthDateProperty() {
+        if (this.selectedPersonBirthDate == null) {
+            this.selectedPersonBirthDate = new ReadOnlyStringWrapper();
+        }
+        return this.selectedPersonBirthDate.getReadOnlyProperty();
+    }
+
+    public final List<Person> getPersons() {
+        return personsProperty().get();
+    }
+
+    public ListProperty<Person> personsProperty() {
+        if (this.persons == null) {
+            this.persons = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.persons;
+    }
+
+    public final void setPersons(List<Person> persons) {
+        personsProperty().addAll(persons);
+    }
+
+    public final EventStatistics getStats() {
+        return this.stats;
+    }
+
+    public final Event getEvent() {
+        return eventProperty().get();
+    }
+
+    public final void setEvent(Event event) {
+        eventProperty().set(event);
     }
 
     public void handleAddYouthMemberButtonClicked() {

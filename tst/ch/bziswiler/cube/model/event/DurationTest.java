@@ -1,6 +1,5 @@
 package ch.bziswiler.cube.model.event;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDateTime;

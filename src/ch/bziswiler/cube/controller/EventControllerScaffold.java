@@ -9,14 +9,6 @@ public abstract class EventControllerScaffold implements ChangeListener<CubeEven
 
     private ObjectProperty<CubeEventModel> model;
 
-    public ObjectProperty<CubeEventModel> getModelProperty() {
-        if (this.model == null) {
-            this.model = new SimpleObjectProperty();
-            this.model.addListener(this);
-        }
-        return this.model;
-    }
-
     @Override
     public void changed(ObservableValue<? extends CubeEventModel> observable, CubeEventModel oldValue, CubeEventModel newValue) {
         if (oldValue != null) {
@@ -27,12 +19,20 @@ public abstract class EventControllerScaffold implements ChangeListener<CubeEven
         }
     }
 
-    protected abstract void initialize(CubeEventModel newValue);
-
     protected abstract void dispose(CubeEventModel oldValue);
+
+    protected abstract void initialize(CubeEventModel newValue);
 
     public final CubeEventModel getModel() {
         return getModelProperty().get();
+    }
+
+    public ObjectProperty<CubeEventModel> getModelProperty() {
+        if (this.model == null) {
+            this.model = new SimpleObjectProperty<>();
+            this.model.addListener(this);
+        }
+        return this.model;
     }
 
     public final void setModel(CubeEventModel model) {

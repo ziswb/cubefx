@@ -24,18 +24,8 @@ public class Person implements Decoratable<Person> {
         this.decorators = Lists.newArrayList();
     }
 
-    public ObjectProperty<Gender> genderProperty() {
-        if (this.gender == null) {
-            this.gender = new SimpleObjectProperty<>();
-        }
-        return this.gender;
-    }
-
-    public StringProperty firstNameProperty() {
-        if (this.firstName == null) {
-            this.firstName = new SimpleStringProperty();
-        }
-        return this.firstName;
+    public final PersonId getPersonId() {
+        return personIdProperty().get();
     }
 
     public ObjectProperty<PersonId> personIdProperty() {
@@ -43,24 +33,6 @@ public class Person implements Decoratable<Person> {
             this.personId = new SimpleObjectProperty<>();
         }
         return this.personId;
-    }
-
-    public StringProperty lastNameProperty() {
-        if (this.lastName == null) {
-            this.lastName = new SimpleStringProperty();
-        }
-        return this.lastName;
-    }
-
-    public ObjectProperty<Address> addressProperty() {
-        if (this.address == null) {
-            this.address = new SimpleObjectProperty<>();
-        }
-        return this.address;
-    }
-
-    public final PersonId getPersonId() {
-        return personIdProperty().get();
     }
 
     public final void setPersonId(PersonId personId) {
@@ -71,12 +43,26 @@ public class Person implements Decoratable<Person> {
         return genderProperty().get();
     }
 
+    public ObjectProperty<Gender> genderProperty() {
+        if (this.gender == null) {
+            this.gender = new SimpleObjectProperty<>();
+        }
+        return this.gender;
+    }
+
     public final void setGender(Gender gender) {
         this.genderProperty().set(gender);
     }
 
     public final String getFirstName() {
         return this.firstNameProperty().get();
+    }
+
+    public StringProperty firstNameProperty() {
+        if (this.firstName == null) {
+            this.firstName = new SimpleStringProperty();
+        }
+        return this.firstName;
     }
 
     public final void setFirstName(String firstName) {
@@ -87,12 +73,26 @@ public class Person implements Decoratable<Person> {
         return this.lastNameProperty().get();
     }
 
+    public StringProperty lastNameProperty() {
+        if (this.lastName == null) {
+            this.lastName = new SimpleStringProperty();
+        }
+        return this.lastName;
+    }
+
     public final void setLastName(String lastName) {
         this.lastNameProperty().set(lastName);
     }
 
     public final Address getAddress() {
         return this.addressProperty().get();
+    }
+
+    public ObjectProperty<Address> addressProperty() {
+        if (this.address == null) {
+            this.address = new SimpleObjectProperty<>();
+        }
+        return this.address;
     }
 
     public final void setAddress(Address address) {

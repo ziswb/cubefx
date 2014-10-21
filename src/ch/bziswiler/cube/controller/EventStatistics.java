@@ -71,18 +71,6 @@ public class EventStatistics {
         return numberOfAllDriversProperty.getReadOnlyProperty();
     }
 
-    private int computeNumberOfPresentMembers(ListProperty<Visit> visits) {
-        return visits.filtered(this.presentMembersPredicate).size();
-    }
-
-    private int computeNumberOfAllMembers(ListProperty<Visit> visits) {
-        return computeAllMembers(visits).size();
-    }
-
-    private FilteredList<Visit> computeAllMembers(ListProperty<Visit> visits) {
-        return visits.filtered(new RemoveDuplicatePersonsPredicate(visits));
-    }
-
     public void update() {
         if (getEvent() != null) {
 
@@ -102,6 +90,18 @@ public class EventStatistics {
         }
     }
 
+    private CubeEventModel getEvent() {
+        return this.model;
+    }
+
+    private int computeNumberOfPresentMembers(ListProperty<Visit> visits) {
+        return visits.filtered(this.presentMembersPredicate).size();
+    }
+
+    private int computeNumberOfAllMembers(ListProperty<Visit> visits) {
+        return computeAllMembers(visits).size();
+    }
+
     private void computeVisitsDigest() {
         final FilteredList<Visit> youthMembers = computeAllMembers(getEvent().youthMemberVisitsProperty());
         final FilteredList<Visit> youthStaff = computeAllMembers(getEvent().youthStaffVisitsProperty());
@@ -111,11 +111,8 @@ public class EventStatistics {
         updateDigest(map);
     }
 
-    private void updateDigest(Map<City, Integer> map) {
-        visitsDigest.clear();
-        for (Map.Entry<City, Integer> entry : map.entrySet()) {
-            visitsDigest.get().add(new KeyValue<>(entry.getKey().getName(), entry.getValue()));
-        }
+    private FilteredList<Visit> computeAllMembers(ListProperty<Visit> visits) {
+        return visits.filtered(new RemoveDuplicatePersonsPredicate(visits));
     }
 
     private void countMembersPerCity(FilteredList<Visit> visits, Map<City, Integer> map) {
@@ -128,12 +125,10 @@ public class EventStatistics {
         }
     }
 
-    private void increaseCounter(Map<City, Integer> map, City city) {
-        if (!map.containsKey(city)) {
-            map.put(city, 1);
-        } else {
-            final int value = map.get(city) + 1;
-            map.put(city, value);
+    private void updateDigest(Map<City, Integer> map) {
+        visitsDigest.clear();
+        for (Map.Entry<City, Integer> entry : map.entrySet()) {
+            visitsDigest.get().add(new KeyValue<>(entry.getKey().getName(), entry.getValue()));
         }
     }
 
@@ -145,7 +140,12 @@ public class EventStatistics {
         ).get();
     }
 
-    private CubeEventModel getEvent() {
-        return this.model;
+    private void increaseCounter(Map<City, Integer> map, City city) {
+        if (!map.containsKey(city)) {
+            map.put(city, 1);
+        } else {
+            final int value = map.get(city) + 1;
+            map.put(city, value);
+        }
     }
 }

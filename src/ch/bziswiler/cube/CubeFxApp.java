@@ -20,6 +20,10 @@ public class CubeFxApp extends Application {
         // nop
     }
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -58,9 +62,5 @@ public class CubeFxApp extends Application {
         EventControllerScaffold controller = loader.getController();
         controller.setModel(EVENT);
         return pane;
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

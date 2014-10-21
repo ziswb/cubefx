@@ -51,30 +51,28 @@ public class CubeScanMemberController extends EventControllerScaffold {
         createBindings();
     }
 
-    @FXML
-    private void handleAddYouthMemberButtonClicked() {
-        getModel().handleAddYouthMemberButtonClicked();
+    @Override
+    protected void dispose(CubeEventModel oldValue) {
+        getModel().selectedPersonProperty().unbind();
+        addDriverButton.disableProperty().unbind();
+        addAdultStaffButton.disableProperty().unbind();
+        addYouthMemberButton.disableProperty().unbind();
+        addYouthStaffButton.disableProperty().unbind();
+        checkOutButton.disableProperty().unbind();
+        portrait.imageProperty().unbind();
+        nameLabel.textProperty().unbind();
     }
 
-
-    @FXML
-    private void handleAddYouthStaffButtonClicked() {
-        getModel().handleAddYouthStaffButtonClicked();
-    }
-
-    @FXML
-    private void handleAddAdultStaffButtonClicked() {
-        getModel().handleAddAdultStaffButtonClicked();
-    }
-
-    @FXML
-    private void handleAddDriverButtonClicked() {
-        getModel().handleAddDriverButtonClicked();
-    }
-
-    @FXML
-    private void handleCheckOutClicked() {
-        getModel().handleCheckOutClicked();
+    private void createExampleData() {
+        this.personData.add(createPerson("Hans", "Muster", Person.Gender.MALE, 1, PersonRole.YOUTH_MEMBER));
+        this.personData.add(createPerson("Ruth", "Mueller", Person.Gender.FEMALE, 2, PersonRole.YOUTH_STAFF));
+        this.personData.add(createPerson("Heinz", "Kurz", Person.Gender.MALE, 3, PersonRole.ADULT_STAFF));
+        this.personData.add(createPerson("Cornelia", "Meier", Person.Gender.FEMALE, 4, PersonRole.ADULT_STAFF, PersonRole.DRIVER));
+        this.personData.add(createPerson("Werner", "Meyer", Person.Gender.MALE, 5, PersonRole.YOUTH_MEMBER));
+        this.personData.add(createPerson("Lydia", "Kunz", Person.Gender.FEMALE, 6, PersonRole.YOUTH_STAFF));
+        this.personData.add(createPerson("Anna", "Best", Person.Gender.FEMALE, 7, PersonRole.ADULT_STAFF));
+        this.personData.add(createPerson("Stefan", "Meier", Person.Gender.MALE, 8, PersonRole.ADULT_STAFF, PersonRole.DRIVER));
+        this.personData.add(createPerson("Martin", "Mueller", Person.Gender.MALE, 9, PersonRole.YOUTH_MEMBER));
     }
 
     private void initializeCombo() {
@@ -123,30 +121,6 @@ public class CubeScanMemberController extends EventControllerScaffold {
         nameLabel.textProperty().bind(getModel().selectedPersonNameProperty());
     }
 
-    @Override
-    protected void dispose(CubeEventModel oldValue) {
-        getModel().selectedPersonProperty().unbind();
-        addDriverButton.disableProperty().unbind();
-        addAdultStaffButton.disableProperty().unbind();
-        addYouthMemberButton.disableProperty().unbind();
-        addYouthStaffButton.disableProperty().unbind();
-        checkOutButton.disableProperty().unbind();
-        portrait.imageProperty().unbind();
-        nameLabel.textProperty().unbind();
-    }
-
-    private void createExampleData() {
-        this.personData.add(createPerson("Hans", "Muster", Person.Gender.MALE, 1, PersonRole.YOUTH_MEMBER));
-        this.personData.add(createPerson("Ruth", "Mueller", Person.Gender.FEMALE, 2, PersonRole.YOUTH_STAFF));
-        this.personData.add(createPerson("Heinz", "Kurz", Person.Gender.MALE, 3, PersonRole.ADULT_STAFF));
-        this.personData.add(createPerson("Cornelia", "Meier", Person.Gender.FEMALE, 4, PersonRole.ADULT_STAFF, PersonRole.DRIVER));
-        this.personData.add(createPerson("Werner", "Meyer", Person.Gender.MALE, 5, PersonRole.YOUTH_MEMBER));
-        this.personData.add(createPerson("Lydia", "Kunz", Person.Gender.FEMALE, 6, PersonRole.YOUTH_STAFF));
-        this.personData.add(createPerson("Anna", "Best", Person.Gender.FEMALE, 7, PersonRole.ADULT_STAFF));
-        this.personData.add(createPerson("Stefan", "Meier", Person.Gender.MALE, 8, PersonRole.ADULT_STAFF, PersonRole.DRIVER));
-        this.personData.add(createPerson("Martin", "Mueller", Person.Gender.MALE, 9, PersonRole.YOUTH_MEMBER));
-    }
-
     private Person createPerson(String firstName, String lastName, Person.Gender gender, int id, PersonRole... roles) {
         Person person = new Person();
         person.setFirstName(firstName);
@@ -166,5 +140,30 @@ public class CubeScanMemberController extends EventControllerScaffold {
         address.setCity(city);
         person.setAddress(address);
         return person;
+    }
+
+    @FXML
+    private void handleAddYouthMemberButtonClicked() {
+        getModel().handleAddYouthMemberButtonClicked();
+    }
+
+    @FXML
+    private void handleAddYouthStaffButtonClicked() {
+        getModel().handleAddYouthStaffButtonClicked();
+    }
+
+    @FXML
+    private void handleAddAdultStaffButtonClicked() {
+        getModel().handleAddAdultStaffButtonClicked();
+    }
+
+    @FXML
+    private void handleAddDriverButtonClicked() {
+        getModel().handleAddDriverButtonClicked();
+    }
+
+    @FXML
+    private void handleCheckOutClicked() {
+        getModel().handleCheckOutClicked();
     }
 }

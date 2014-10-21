@@ -12,6 +12,10 @@ public class Visit {
     private ObjectProperty<LocalDateTime> checkIn;
     private ObjectProperty<LocalDateTime> checkOut;
 
+    public final Person getPerson() {
+        return personProperty().get();
+    }
+
     public ObjectProperty<Person> personProperty() {
         if (this.person == null) {
             this.person = new SimpleObjectProperty<>();
@@ -19,12 +23,12 @@ public class Visit {
         return this.person;
     }
 
-    public final Person getPerson() {
-        return personProperty().get();
-    }
-
     public final void setPerson(Person person) {
         personProperty().set(person);
+    }
+
+    public final LocalDateTime getCheckIn() {
+        return checkInProperty().get();
     }
 
     public ObjectProperty<LocalDateTime> checkInProperty() {
@@ -34,23 +38,19 @@ public class Visit {
         return this.checkIn;
     }
 
-    public ObjectProperty<LocalDateTime> checkOutProperty() {
-        if (this.checkOut == null) {
-            this.checkOut = new SimpleObjectProperty<>();
-        }
-        return this.checkOut;
-    }
-
-    public final LocalDateTime getCheckIn() {
-        return checkInProperty().get();
-    }
-
     public final void setCheckIn(LocalDateTime dateTime) {
         checkInProperty().set(dateTime);
     }
 
     public final LocalDateTime getCheckOut() {
         return checkOutProperty().get();
+    }
+
+    public ObjectProperty<LocalDateTime> checkOutProperty() {
+        if (this.checkOut == null) {
+            this.checkOut = new SimpleObjectProperty<>();
+        }
+        return this.checkOut;
     }
 
     public final void setCheckOut(LocalDateTime dateTime) {
