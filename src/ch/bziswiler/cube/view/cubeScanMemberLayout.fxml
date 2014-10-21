@@ -30,7 +30,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="cityLabel" text="4013 Baselikon" GridPane.rowIndex="2">
+                  <Label fx:id="cityLabel" text="8013 Buechegg" GridPane.rowIndex="2">
                      <font>
                         <Font size="18.0" />
                      </font>
