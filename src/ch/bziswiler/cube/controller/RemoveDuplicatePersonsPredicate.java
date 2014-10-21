@@ -24,7 +24,7 @@ public class RemoveDuplicatePersonsPredicate implements Predicate<Visit> {
             final Person otherVisitsPerson = v.personProperty().get();
             if (visitsPerson.equals(otherVisitsPerson)) {
                 final int indexOfOtherVisit = list.indexOf(v);
-                if (indexOfVisit != indexOfOtherVisit) {
+                if (indexOfVisit > indexOfOtherVisit) {
                     return DONT_INCLUDE_THIS_VISIT_IN_LIST;
                 }
             }
