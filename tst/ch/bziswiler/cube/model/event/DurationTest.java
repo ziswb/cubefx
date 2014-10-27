@@ -16,17 +16,9 @@ public class DurationTest {
         LocalDateTime end = LocalDateTime.of(2015, 10, 23, 22, 31);
         duration.setStart(start);
         duration.setEnd(end);
-        long years = duration.getYears();
-        long months = duration.getMonths();
-        long weeks = duration.getWeeks();
-        long days = duration.getDays();
         long hours = duration.getHours();
         long minutes = duration.getMinutes();
-        assertThat(years, is(1L));
-        assertThat(months, is(13L));
-        assertThat(weeks, is(56L));
-        assertThat(days, is(396L));
         assertThat(hours, is(9505L));
-        assertThat(minutes, is(570331L));
+        assertThat(minutes, is(31L));
     }
 }

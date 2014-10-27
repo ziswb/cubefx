@@ -2,17 +2,19 @@ package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.model.VisitsUtil;
 import ch.bziswiler.cube.model.address.Address;
+import ch.bziswiler.cube.model.event.Duration;
 import ch.bziswiler.cube.model.event.Event;
 import ch.bziswiler.cube.model.event.PersonMetaDataDecorator;
 import ch.bziswiler.cube.model.event.PersonRole;
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -22,19 +24,19 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 
 public class CubeEventModel {
 
+    private final Duration duration = new Duration();
     private final EventStatistics stats;
     private ObjectProperty<LocalDateTime> start;
     private ObjectProperty<LocalDateTime> end;
-    private StringBinding durationBinding;
+    private ReadOnlyLongWrapper minutesOfEventDuration;
+    private ReadOnlyLongWrapper hoursOfEventDuration;
     private ObjectProperty<Address> address;
     private ReadOnlyBooleanWrapper addYouthMemberButtonDisabled;
     private ReadOnlyBooleanWrapper addYouthStaffButtonDisabled;
@@ -52,16 +54,16 @@ public class CubeEventModel {
     private ListProperty<Visit> youthStaffVisits;
     private ListProperty<Visit> adultStaffVisits;
     private ListProperty<Visit> driverVisits;
-    private ReadOnlyObjectWrapper<Pane> expandedPane;
     private ObjectProperty<Event> event;
     private ChangeListener<Event> eventListChangeListener;
-    private Callable<String> durationFunc = () -> "Not yet implemented";
 
     public CubeEventModel() {
         this.eventListChangeListener = (observable, oldValue, newValue) -> eventChanged(newValue, oldValue);
         // TODO resolve event dependency
         eventProperty().set(new Event());
         this.stats = new EventStatistics(this);
+        this.duration.startProperty().bind(startProperty());
+        this.duration.endProperty().bind(endProperty());
     }
 
     protected void eventChanged(Event newValue, Event oldValue) {
@@ -82,12 +84,25 @@ public class CubeEventModel {
     }
 
     public ObjectProperty<Event> eventProperty() {
-
         if (this.event == null) {
             this.event = new SimpleObjectProperty<>();
             this.event.addListener(eventListChangeListener);
         }
         return this.event;
+    }
+
+    public ObjectProperty<LocalDateTime> startProperty() {
+        if (this.start == null) {
+            this.start = new SimpleObjectProperty<>();
+        }
+        return this.start;
+    }
+
+    public ObjectProperty<LocalDateTime> endProperty() {
+        if (this.end == null) {
+            this.end = new SimpleObjectProperty<>();
+        }
+        return this.end;
     }
 
     public ListProperty<Visit> driverVisitsProperty() {
@@ -133,30 +148,44 @@ public class CubeEventModel {
         addressProperty().set(address);
     }
 
-    public final StringBinding getDurationBinding() {
-        return durationBinding();
+    public ReadOnlyLongProperty hoursOfEventDurationProperty() {
+        return hoursOfEventDurationWrapper().getReadOnlyProperty();
     }
 
-    public StringBinding durationBinding() {
-        if (durationBinding == null) {
-            this.durationBinding = null;
-            this.durationBinding = Bindings.createStringBinding(durationFunc, startProperty(), endProperty());
+    private ReadOnlyLongWrapper hoursOfEventDurationWrapper() {
+        if (this.hoursOfEventDuration == null) {
+            this.hoursOfEventDuration = new ReadOnlyLongWrapper();
+            this.hoursOfEventDuration.bind(this.duration.hoursProperty());
         }
-        return this.durationBinding;
+        return this.hoursOfEventDuration;
     }
 
-    public ObjectProperty<LocalDateTime> startProperty() {
-        if (this.start == null) {
-            this.start = new SimpleObjectProperty<>();
-        }
-        return this.start;
+    public ReadOnlyLongProperty minutesOfEventDurationProperty() {
+        return minutesOfEventDurationWrapper().getReadOnlyProperty();
     }
 
-    public ObjectProperty<LocalDateTime> endProperty() {
-        if (this.end == null) {
-            this.end = new SimpleObjectProperty<>();
+    private ReadOnlyLongWrapper minutesOfEventDurationWrapper() {
+        if (this.minutesOfEventDuration == null) {
+            this.minutesOfEventDuration = new ReadOnlyLongWrapper();
+            this.minutesOfEventDuration.bind(this.duration.minutesProperty());
         }
-        return this.end;
+        return this.minutesOfEventDuration;
+    }
+
+    public final LocalDateTime getStart() {
+        return startProperty().get();
+    }
+
+    public final void setStart(LocalDateTime start) {
+        startProperty().set(start);
+    }
+
+    public final LocalDateTime getEnd() {
+        return endProperty().get();
+    }
+
+    public final void setEnd(LocalDateTime end) {
+        endProperty().set(end);
     }
 
     public final Image getPortraitImage() {
@@ -172,21 +201,6 @@ public class CubeEventModel {
             this.portraitImage = new ReadOnlyObjectWrapper<>();
         }
         return this.portraitImage;
-    }
-
-    public final Pane getExpandedPane() {
-        return expandedPaneProperty().get();
-    }
-
-    public ReadOnlyObjectProperty<Pane> expandedPaneProperty() {
-        return expandedPaneWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyObjectWrapper<Pane> expandedPaneWrapper() {
-        if (this.expandedPane == null) {
-            this.expandedPane = new ReadOnlyObjectWrapper<>();
-        }
-        return this.expandedPane;
     }
 
     public final List<Visit> getYouthMemberVisits() {

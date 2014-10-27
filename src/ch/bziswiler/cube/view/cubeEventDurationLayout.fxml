@@ -29,7 +29,7 @@
             </AnchorPane>
             <HBox alignment="CENTER">
                <children>
-                  <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" text="_/">
+                  <Button contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onMouseClicked="#handleEditStartDateTimeButtonClicked" text="_/">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -41,12 +41,12 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Label text="28.04.2014 20:15">
+                  <Label fx:id="startDateTimeLabel" text="--.--.---- --:--">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Start">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleStartButtonClicked" text="Start">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
@@ -63,17 +63,17 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Label text="28.04.2014 23:50">
+                  <Label fx:id="endDateTimeLabel" text="--.--.---- --:--">
                      <HBox.margin>
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" text="Beenden">
+                  <Button mnemonicParsing="false" onMouseClicked="#handleEndButtonClicked" text="Beenden">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Label text="2:00 h">
+                  <Label fx:id="durationLabel" text="2:00 h">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>

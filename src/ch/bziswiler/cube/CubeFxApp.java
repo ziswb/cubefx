@@ -3,6 +3,7 @@ package ch.bziswiler.cube;
 import ch.bziswiler.cube.controller.CubeEventModel;
 import ch.bziswiler.cube.controller.EventControllerScaffold;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -15,17 +16,29 @@ import javafx.stage.Stage;
 public class CubeFxApp extends Application {
 
     public static final CubeEventModel EVENT = new CubeEventModel();
+    private static CubeFxApp INSTANCE;
+    private Stage primaryStage;
 
     public CubeFxApp() {
-        // nop
+        INSTANCE = this;
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public static CubeFxApp getInstance() {
+        return INSTANCE;
+    }
+
+    public Stage getPrimaryStage() {
+        return this.primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        this.primaryStage = primaryStage;
 
         HBox root = FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
         VBox scan = (VBox) loadResourceAndEventController("view/cubeScanMemberLayout.fxml");
