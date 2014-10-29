@@ -1,29 +1,27 @@
 package ch.bziswiler.cube.controller;
 
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.function.Function;
 
 public class DateTimePickerController {
 
     private Stage dialogStage;
-    private LocalDateTime notBefore = LocalDateTime.MIN;
-    private LocalDateTime notAfter = LocalDateTime.MAX;
     private boolean ok = false;
-    private LocalDate pickedDate = LocalDate.now();
-    private LocalTime pickedTime = LocalTime.now();
+    private Model model;
 
     @FXML
     private DatePicker datePicker;
@@ -34,17 +32,17 @@ public class DateTimePickerController {
 
     public void setNotBefore(LocalDateTime notBefore) {
         if (notBefore == null) {
-            this.notBefore = LocalDateTime.MIN;
+            this.model.setNotBefore(LocalDateTime.MIN);
         } else {
-            this.notBefore = notBefore;
+            this.model.setNotBefore(notBefore);
         }
     }
 
     public void setNotAfter(LocalDateTime notAfter) {
         if (notAfter == null) {
-            this.notAfter = LocalDateTime.MAX;
+            this.model.setNotAfter(LocalDateTime.MAX);
         } else {
-            this.notAfter = notAfter;
+            this.model.setNotAfter(notAfter);
         }
     }
 
@@ -54,88 +52,57 @@ public class DateTimePickerController {
 
     @FXML
     private void initialize() {
-        final Callback<DatePicker, DateCell> dayCellFactory =
-                new Callback<DatePicker, DateCell>() {
-                    @Override
-                    public DateCell call(final DatePicker datePicker) {
-                        return new DateCell() {
-                            @Override
-                            public void updateItem(LocalDate item, boolean empty) {
-                                super.updateItem(item, empty);
-                                if (item.isBefore(notBefore.toLocalDate()) || item.isAfter(notAfter.toLocalDate())) {
-                                    setDisable(true);
-                                    setStyle("-fx-background-color: lightgray;");
-                                }
-                            }
-                        };
-                    }
-                };
-        datePicker.setDayCellFactory(dayCellFactory);
-        datePicker.setValue(LocalDate.now());
-        if (this.notAfter != null) {
-            final LocalTime time = this.notAfter.toLocalTime();
-            time.getHour();
-        }
-        hourPicker.getItems().addAll(new SimpleListProperty<>(FXCollections.observableArrayList()));
+        this.model = new Model();
+        initializeDatePicker();
+        initializeHourPicker();
+        initializeMinutePicker();
+    }
+
+    private void initializeDatePicker() {
+        this.datePicker.valueProperty().bindBidirectional(model.pickedDateProperty());
+        this.datePicker.setDayCellFactory(new DatePickerDateCellFactory());
+    }
+
+    private void initializeHourPicker() {
+        this.hourPicker.valueProperty().bindBidirectional(model.pickedHourProperty());
+        this.hourPicker.setConverter(new IntegerStringConverter());
         for (int i = 1; i <= 24; i++) {
-            hourPicker.getItems().add(i);
+            this.hourPicker.getItems().add(i);
         }
-        hourPicker.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+        this.hourPicker.setCellFactory(new ConditionalListViewCellFactory<Integer>(new Function<Integer, Boolean>() {
             @Override
-            public ListCell<Integer> call(ListView<Integer> param) {
-                return new ListCell<Integer>() {
-                    @Override
-                    protected void updateItem(Integer item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setDisable(false);
-                        setText(String.valueOf(item));
-                        if (getStyle().contains("-fx-background-color: lightgray;")) {
-                            setStyle(getStyle().replace("-fx-background-color: lightgray;", ""));
-                        }
-                        if (item != null && datePicker.getValue().isEqual(notAfter.toLocalDate()) && item > notAfter.getHour()) {
-                            setDisable(true);
-                            setStyle("-fx-background-color: lightgray;");
-                        }
-                    }
-                };
+            public Boolean apply(Integer item) {
+                final LocalDateTime notAfter = model.getNotAfter();
+                final LocalDate pickedDate = datePicker.getValue();
+                return item != null && pickedDate.isEqual(notAfter.toLocalDate()) && item > notAfter.getHour();
             }
-        });
-        minutePicker.getItems().addAll(new SimpleListProperty<>(FXCollections.observableArrayList()));
+        }));
+    }
+
+    private void initializeMinutePicker() {
+        this.minutePicker.valueProperty().bindBidirectional(model.pickedMinuteProperty());
+        this.minutePicker.setConverter(new IntegerStringConverter());
         for (int i = 1; i <= 60; i++) {
-            minutePicker.getItems().add(i);
+            this.minutePicker.getItems().add(i);
         }
-        minutePicker.setCellFactory(new Callback<ListView<Integer>, ListCell<Integer>>() {
+        this.minutePicker.setCellFactory(new ConditionalListViewCellFactory<Integer>(new Function<Integer, Boolean>() {
             @Override
-            public ListCell<Integer> call(ListView<Integer> param) {
-                return new ListCell<Integer>() {
-                    @Override
-                    protected void updateItem(Integer item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setDisable(false);
-                        setText(String.valueOf(item));
-                        if (getStyle().contains("-fx-background-color: lightgray;")) {
-                            setStyle(getStyle().replace("-fx-background-color: lightgray;", ""));
-                        }
-                        if (item != null && datePicker.getValue().isEqual(notAfter.toLocalDate()) && item >= notAfter.getMinute()) {
-                            setDisable(true);
-                            setStyle("-fx-background-color: lightgray;");
-                        }
-                    }
-                };
+            public Boolean apply(Integer item) {
+                final LocalDateTime notAfter = model.getNotAfter();
+                final LocalDate pickedDate = datePicker.getValue();
+                return item != null && pickedDate.isEqual(notAfter.toLocalDate()) && item >= notAfter.getMinute();
             }
-        });
+        }));
     }
 
     public LocalDateTime getPickedDateTime() {
-        return LocalDateTime.of(this.pickedDate, this.pickedTime);
+        final LocalDate date = this.model.getPickedDate();
+        final LocalTime time = LocalTime.of(this.model.getPickedHour(), this.model.getPickedMinute());
+        return LocalDateTime.of(date, time);
     }
 
     @FXML
     private void handleOk() {
-        this.pickedDate = this.datePicker.getValue();
-        final Object selectedHours = this.hourPicker.getSelectionModel().getSelectedItem();
-        final Object selectedMinutes = this.minutePicker.getSelectionModel().getSelectedItem();
-        this.pickedTime = LocalTime.of(Integer.valueOf(selectedHours.toString()), Integer.valueOf(selectedMinutes.toString()));
         this.ok = true;
         this.dialogStage.close();
     }
@@ -143,10 +110,129 @@ public class DateTimePickerController {
     @FXML
     private void handleCancel() {
         this.ok = false;
-        dialogStage.close();
+        this.dialogStage.close();
+    }
+
+    public void setInitialDateTime(LocalDateTime initialDateTime) {
+        this.model.setPickedDate(initialDateTime.toLocalDate());
+        this.model.setPickedHour(initialDateTime.getHour());
+        this.model.setPickedMinute(initialDateTime.getMinute());
     }
 
     public boolean isOk() {
-        return ok;
+        return this.ok;
+    }
+
+    private static class Model {
+
+        private ObjectProperty<LocalDateTime> notBefore = new SimpleObjectProperty<>(LocalDateTime.MIN);
+        private ObjectProperty<LocalDateTime> notAfter = new SimpleObjectProperty<>(LocalDateTime.MAX);
+        private ObjectProperty<LocalDate> pickedDate = new SimpleObjectProperty<>(LocalDate.now());
+        private ObjectProperty<Integer> pickedHour = new SimpleObjectProperty<>(1);
+        private ObjectProperty<Integer> pickedMinute = new SimpleObjectProperty<>(1);
+
+        public final LocalDateTime getNotBefore() {
+            return notBeforeProperty().get();
+        }
+
+        public final void setNotBefore(LocalDateTime notBefore) {
+            notBeforeProperty().set(notBefore);
+        }
+
+        public ObjectProperty<LocalDateTime> notBeforeProperty() {
+            return this.notBefore;
+        }
+
+        public final LocalDateTime getNotAfter() {
+            return notAfterProperty().get();
+        }
+
+        public final void setNotAfter(LocalDateTime notAfter) {
+            notAfterProperty().set(notAfter);
+        }
+
+        public ObjectProperty<LocalDateTime> notAfterProperty() {
+            return this.notAfter;
+        }
+
+        public ObjectProperty<Integer> pickedHourProperty() {
+            return this.pickedHour;
+        }
+
+        public ObjectProperty<Integer> pickedMinuteProperty() {
+            return this.pickedMinute;
+        }
+
+        public ObjectProperty<LocalDate> pickedDateProperty() {
+            return this.pickedDate;
+        }
+
+        public final Integer getPickedHour() {
+            return this.pickedHour.get();
+        }
+
+        public final void setPickedHour(Integer pickedHour) {
+            this.pickedHour.set(pickedHour);
+        }
+
+        public final Integer getPickedMinute() {
+            return this.pickedMinute.get();
+        }
+
+        public final void setPickedMinute(Integer pickedMinute) {
+            this.pickedMinute.set(pickedMinute);
+        }
+
+        public final LocalDate getPickedDate() {
+            return this.pickedDate.get();
+        }
+
+        public final void setPickedDate(LocalDate pickedDate) {
+            this.pickedDate.set(pickedDate);
+        }
+    }
+
+    private class ConditionalListViewCellFactory<T> implements Callback<ListView<T>, ListCell<T>> {
+
+        private final Function<T, Boolean> condition;
+
+        private ConditionalListViewCellFactory(Function<T, Boolean> condition) {
+            this.condition = condition;
+        }
+
+        @Override
+        public ListCell<T> call(ListView<T> param) {
+            return new ListCell<T>() {
+                @Override
+                protected void updateItem(T item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setDisable(false);
+                    setText(String.valueOf(item));
+                    if (getStyle().contains("-fx-background-color: lightgray;")) {
+                        setStyle(getStyle().replace("-fx-background-color: lightgray;", ""));
+                    }
+                    if (condition.apply(item)) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: lightgray;");
+                    }
+                }
+            };
+        }
+    }
+
+    private class DatePickerDateCellFactory implements Callback<DatePicker, DateCell> {
+        @Override
+        public DateCell call(final DatePicker datePicker) {
+            return new DateCell() {
+                @Override
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (item.isBefore(model.getNotBefore().toLocalDate()) || item.isAfter(model.getNotAfter().toLocalDate())) {
+                        setDisable(true);
+                        setStyle("-fx-background-color: lightgray;");
+                    }
+                }
+            };
+        }
     }
 }

@@ -12,11 +12,11 @@ import java.util.concurrent.Callable;
 
 public class Duration {
 
+    private static final BigDecimal SIXTY = BigDecimal.valueOf(60);
     private ObjectProperty<LocalDateTime> start;
     private ObjectProperty<LocalDateTime> end;
     private ReadOnlyLongWrapper hours;
     private ReadOnlyLongWrapper minutes;
-    private static final BigDecimal SIXTY = BigDecimal.valueOf(60);
 
     public Duration() {
         bindHours();

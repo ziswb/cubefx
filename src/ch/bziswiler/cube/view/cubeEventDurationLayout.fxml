@@ -46,12 +46,12 @@
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onMouseClicked="#handleStartButtonClicked" text="Start">
+                  <Button fx:id="startButton" mnemonicParsing="false" onMouseClicked="#handleStartButtonClicked" text="Start">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" text="_/">
+                  <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onMouseClicked="#handleEditEndDateTimeButtonClicked" text="_/">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
@@ -68,7 +68,7 @@
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <Button mnemonicParsing="false" onMouseClicked="#handleEndButtonClicked" text="Beenden">
+                  <Button fx:id="endButton" mnemonicParsing="false" onMouseClicked="#handleEndButtonClicked" text="Beenden">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>

@@ -6,6 +6,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
@@ -28,17 +29,29 @@ public class CubeEventDurationController extends EventControllerScaffold {
     private Label endDateTimeLabel;
     @FXML
     private Label durationLabel;
+    @FXML
+    private Button startButton;
+    @FXML
+    private Button endButton;
 
     @Override
     protected void dispose(CubeEventModel oldValue) {
+        this.endButton.disableProperty().unbind();
+        this.startButton.disableProperty().unbind();
         this.startDateTimeLabel.textProperty().unbindBidirectional(oldValue.startProperty());
         this.endDateTimeLabel.textProperty().unbindBidirectional(oldValue.endProperty());
+        this.durationLabel.textProperty().unbind();
     }
 
     @Override
     protected void initialize(CubeEventModel newValue) {
+
+        this.endButton.disableProperty().bind(getModel().endButtonDisabledProperty());
+        this.startButton.disableProperty().bind(getModel().startButtonDisabledProperty());
+
         this.startDateTimeLabel.textProperty().bindBidirectional(newValue.startProperty(), new LocalDateTimeStringConverter());
         this.endDateTimeLabel.textProperty().bindBidirectional(newValue.endProperty(), new LocalDateTimeStringConverter());
+
         final StringBinding hoursBinding = Bindings.createStringBinding(new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -80,32 +93,53 @@ public class CubeEventDurationController extends EventControllerScaffold {
 
     @FXML
     public void handleEditStartDateTimeButtonClicked() throws IOException {
-        // Load the fxml file and create a new stage for the popup dialog.
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../view/dateTimePicker.fxml"));
-        Region page = loader.load();
+        final FXMLLoader loader = new FXMLLoader();
+        final Stage dialog = loadModalDateTimePickerDialog(loader);
+        final DateTimePickerController controller = loader.getController();
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime end = getModel().getEnd();
+        final LocalDateTime start = getModel().getStart();
+        controller.setNotAfter(end != null ? end : now); // FIXME use earliest check-in date!
+        controller.setNotBefore(LocalDateTime.MIN);
+        controller.setDialogStage(dialog);
+        controller.setInitialDateTime(start != null ? start : now);
+        // Show the dialog and wait until the user closes it
+        dialog.showAndWait();
+        if (controller.isOk()) {
+            getModel().setStart(controller.getPickedDateTime());
+        }
+    }
 
-        // Create the dialog Stage.
-        Stage dialogStage = new Stage();
-        dialogStage.setTitle("Edit Person");
+    private Stage loadModalDateTimePickerDialog(FXMLLoader loader) throws IOException {
+        loader.setLocation(getClass().getResource("../view/dateTimePicker.fxml"));
+        final Region page = loader.load();
+        final Stage dialogStage = new Stage();
+        dialogStage.setTitle("Choose Date and Time");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initStyle(StageStyle.DECORATED);
         dialogStage.initOwner(CubeFxApp.getInstance().getPrimaryStage());
         dialogStage.getIcons().add(new Image("file:resources/images/edit.png"));
-        Scene scene = new Scene(page);
+        final Scene scene = new Scene(page);
         dialogStage.setScene(scene);
+        return dialogStage;
+    }
 
-        // Set the person into the controller.
-        DateTimePickerController controller = loader.getController();
-        controller.setNotAfter(getModel().getEnd());
-        controller.setNotBefore(LocalDateTime.MIN);
-        controller.setDialogStage(dialogStage);
-
+    @FXML
+    public void handleEditEndDateTimeButtonClicked() throws IOException {
+        final FXMLLoader loader = new FXMLLoader();
+        final Stage dialog = loadModalDateTimePickerDialog(loader);
+        final DateTimePickerController controller = loader.getController();
+        final LocalDateTime now = LocalDateTime.now();
+        final LocalDateTime end = getModel().getEnd();
+        final LocalDateTime start = getModel().getStart();
+        controller.setNotAfter(LocalDateTime.MAX);
+        controller.setNotBefore(start != null ? start : now); // FIXME use latest check-out date!
+        controller.setDialogStage(dialog);
+        controller.setInitialDateTime(end != null ? end : now);
         // Show the dialog and wait until the user closes it
-        dialogStage.showAndWait();
-
+        dialog.showAndWait();
         if (controller.isOk()) {
-            getModel().setStart(controller.getPickedDateTime());
+            getModel().setEnd(controller.getPickedDateTime());
         }
     }
 

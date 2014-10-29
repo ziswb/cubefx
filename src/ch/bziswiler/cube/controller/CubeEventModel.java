@@ -9,6 +9,7 @@ import ch.bziswiler.cube.model.event.PersonRole;
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -22,15 +23,18 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 public class CubeEventModel {
 
+    public static final boolean DEFAULT_BUTTON_DISABLED_VALUE = true;
     private final Duration duration = new Duration();
     private final EventStatistics stats;
     private ObjectProperty<LocalDateTime> start;
@@ -43,6 +47,8 @@ public class CubeEventModel {
     private ReadOnlyBooleanWrapper addAdultStaffButtonDisabled;
     private ReadOnlyBooleanWrapper addDriverButtonDisabled;
     private ReadOnlyBooleanWrapper checkOutButtonDisabled;
+    private ReadOnlyBooleanWrapper startButtonDisabled;
+    private ReadOnlyBooleanWrapper endButtonDisabled;
     private ListProperty<Person> persons;
     private SimpleObjectProperty<Person> selectedPerson;
     private ReadOnlyStringWrapper selectedPersonName;
@@ -67,6 +73,7 @@ public class CubeEventModel {
     }
 
     protected void eventChanged(Event newValue, Event oldValue) {
+        // TODO clean up bindings -> data saved in "Event" is currently incomplete. e.g. start, end, etc.
         if (oldValue != null) {
             Bindings.unbindBidirectional(oldValue.driverVisitsProperty(), driverVisitsProperty());
             Bindings.unbindBidirectional(oldValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
@@ -83,17 +90,15 @@ public class CubeEventModel {
         }
     }
 
-    public ObjectProperty<Event> eventProperty() {
-        if (this.event == null) {
-            this.event = new SimpleObjectProperty<>();
-            this.event.addListener(eventListChangeListener);
-        }
-        return this.event;
-    }
-
     public ObjectProperty<LocalDateTime> startProperty() {
         if (this.start == null) {
             this.start = new SimpleObjectProperty<>();
+            this.start.addListener(new ChangeListener<LocalDateTime>() {
+                @Override
+                public void changed(ObservableValue<? extends LocalDateTime> observable, LocalDateTime oldValue, LocalDateTime newValue) {
+                    updateButtonEnablement(selectedPersonProperty().get());
+                }
+            });
         }
         return this.start;
     }
@@ -101,36 +106,18 @@ public class CubeEventModel {
     public ObjectProperty<LocalDateTime> endProperty() {
         if (this.end == null) {
             this.end = new SimpleObjectProperty<>();
+            this.end.addListener(new ChangeListener<LocalDateTime>() {
+                @Override
+                public void changed(ObservableValue<? extends LocalDateTime> observable, LocalDateTime oldValue, LocalDateTime newValue) {
+                    updateButtonEnablement(selectedPersonProperty().get());
+                }
+            });
         }
         return this.end;
     }
 
-    public ListProperty<Visit> driverVisitsProperty() {
-        if (this.driverVisits == null) {
-            this.driverVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.driverVisits;
-    }
-
-    public ListProperty<Visit> adultStaffVisitsProperty() {
-        if (this.adultStaffVisits == null) {
-            this.adultStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.adultStaffVisits;
-    }
-
-    public ListProperty<Visit> youthMemberVisitsProperty() {
-        if (this.youthMemberVisits == null) {
-            this.youthMemberVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.youthMemberVisits;
-    }
-
-    public ListProperty<Visit> youthStaffVisitsProperty() {
-        if (this.youthStaffVisits == null) {
-            this.youthStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
-        }
-        return this.youthStaffVisits;
+    public final Address geAddress() {
+        return addressProperty().get();
     }
 
     public ObjectProperty<Address> addressProperty() {
@@ -138,10 +125,6 @@ public class CubeEventModel {
             this.address = new SimpleObjectProperty<>();
         }
         return this.address;
-    }
-
-    public final Address geAddress() {
-        return addressProperty().get();
     }
 
     public final void setAddress(Address address) {
@@ -207,12 +190,26 @@ public class CubeEventModel {
         return youthMemberVisitsProperty().get();
     }
 
+    public ListProperty<Visit> youthMemberVisitsProperty() {
+        if (this.youthMemberVisits == null) {
+            this.youthMemberVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.youthMemberVisits;
+    }
+
     public final void addYouthMemberVisit(Visit visit) {
         youthMemberVisitsProperty().add(visit);
     }
 
     public final List<Visit> getYouthStaffVisits() {
         return youthStaffVisitsProperty().get();
+    }
+
+    public ListProperty<Visit> youthStaffVisitsProperty() {
+        if (this.youthStaffVisits == null) {
+            this.youthStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.youthStaffVisits;
     }
 
     public final void addYouthStaffVisit(Visit visit) {
@@ -223,12 +220,26 @@ public class CubeEventModel {
         return adultStaffVisitsProperty().get();
     }
 
+    public ListProperty<Visit> adultStaffVisitsProperty() {
+        if (this.adultStaffVisits == null) {
+            this.adultStaffVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.adultStaffVisits;
+    }
+
     public final void addAdultStaffVisit(Visit visit) {
         adultStaffVisitsProperty().add(visit);
     }
 
     public final List<Visit> getDriverVisits() {
         return driverVisitsProperty().get();
+    }
+
+    public ListProperty<Visit> driverVisitsProperty() {
+        if (this.driverVisits == null) {
+            this.driverVisits = new SimpleListProperty<>(FXCollections.observableArrayList());
+        }
+        return this.driverVisits;
     }
 
     public final void addDriverVisit(Visit visit) {
@@ -245,84 +256,34 @@ public class CubeEventModel {
 
     private ReadOnlyBooleanWrapper addYouthMemberButtonDisabledWrapper() {
         if (this.addYouthMemberButtonDisabled == null) {
-            this.addYouthMemberButtonDisabled = new ReadOnlyBooleanWrapper(true);
+            this.addYouthMemberButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
         }
         return this.addYouthMemberButtonDisabled;
     }
 
-    public final Boolean getAddYouthStaffButtonDisabled() {
-        return addYouthStaffButtonDisabledProperty().get();
-    }
-
-    public ReadOnlyBooleanProperty addYouthStaffButtonDisabledProperty() {
-        return addYouthStaffButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addYouthStaffButtonDisabledWrapper() {
-        if (this.addYouthStaffButtonDisabled == null) {
-            this.addYouthStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+    private PersonMetaDataDecorator getSelectedPersonsDecoratorIfEventIsOnGoing() {
+        if (startProperty().get() == null) {
+            return null;
         }
-        return this.addYouthStaffButtonDisabled;
-    }
-
-    public final Boolean getAddAdultStaffButtonDisabled() {
-        return addAdultStaffButtonDisabledProperty().get();
-    }
-
-    public ReadOnlyBooleanProperty addAdultStaffButtonDisabledProperty() {
-        return this.addAdultStaffButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addAdultStaffButtonDisabledWrapper() {
-        if (this.addAdultStaffButtonDisabled == null) {
-            this.addAdultStaffButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        if (endProperty().get() != null) {
+            return null;
         }
-        return this.addAdultStaffButtonDisabled;
-    }
-
-    public final Boolean getAddDriverButtonDisabled() {
-        return addDriverButtonDisabledProperty().get();
-    }
-
-    public ReadOnlyBooleanProperty addDriverButtonDisabledProperty() {
-        return this.addDriverButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper addDriverButtonDisabledWrapper() {
-        if (this.addDriverButtonDisabled == null) {
-            this.addDriverButtonDisabled = new ReadOnlyBooleanWrapper(true);
+        final Person person = selectedPersonProperty().get();
+        if (person == null) {
+            return null;
         }
-        return this.addDriverButtonDisabled;
-    }
-
-    public final Boolean getCheckOutButtonDisabled() {
-        return checkOutButtonDisabledProperty().get();
-    }
-
-    public ReadOnlyBooleanProperty checkOutButtonDisabledProperty() {
-        return this.checkOutButtonDisabledWrapper().getReadOnlyProperty();
-    }
-
-    private ReadOnlyBooleanWrapper checkOutButtonDisabledWrapper() {
-        if (this.checkOutButtonDisabled == null) {
-            this.checkOutButtonDisabled = new ReadOnlyBooleanWrapper(true);
-        }
-        return this.checkOutButtonDisabled;
-    }
-
-    public final Person getSelectedPerson() {
-        return selectedPersonProperty().get();
+        return person.getDecorator(PersonMetaDataDecorator.class);
     }
 
     public ObjectProperty<Person> selectedPersonProperty() {
         if (this.selectedPerson == null) {
             this.selectedPerson = new SimpleObjectProperty<>();
-            this.selectedPerson.addListener((observable, oldValue, newValue) -> updatePersonDetails(newValue));
+            this.selectedPerson.addListener((observable, oldValue, newValue) -> updateScanMemberView(newValue));
         }
         return this.selectedPerson;
     }
 
-    private void updatePersonDetails(Person selectedPerson) {
+    private void updateScanMemberView(Person selectedPerson) {
         updateButtonEnablement(selectedPerson);
         if (selectedPerson == null) {
             return;
@@ -334,6 +295,12 @@ public class CubeEventModel {
     private void updateButtonEnablement(Person selectedPerson) {
         disableAllButtons();
         if (selectedPerson == null) {
+            return;
+        }
+        if (endProperty().get() != null) {
+            return;
+        }
+        if (startProperty().get() == null) {
             return;
         }
         final Optional<Visit> visit = VisitsUtil.findNonCheckOutVisit(this, selectedPerson);
@@ -380,11 +347,114 @@ public class CubeEventModel {
         this.checkOutButtonDisabledWrapper().set(true);
     }
 
-    private ReadOnlyStringWrapper selectedPersonNameWrapper() {
-        if (this.selectedPersonName == null) {
-            this.selectedPersonName = new ReadOnlyStringWrapper();
+    public final Boolean getAddYouthStaffButtonDisabled() {
+        return addYouthStaffButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty addYouthStaffButtonDisabledProperty() {
+        return addYouthStaffButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addYouthStaffButtonDisabledWrapper() {
+        if (this.addYouthStaffButtonDisabled == null) {
+            this.addYouthStaffButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
         }
-        return this.selectedPersonName;
+        return this.addYouthStaffButtonDisabled;
+    }
+
+    public final Boolean getAddAdultStaffButtonDisabled() {
+        return addAdultStaffButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty addAdultStaffButtonDisabledProperty() {
+        return this.addAdultStaffButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addAdultStaffButtonDisabledWrapper() {
+        if (this.addAdultStaffButtonDisabled == null) {
+            this.addAdultStaffButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
+        }
+        return this.addAdultStaffButtonDisabled;
+    }
+
+    public final Boolean getAddDriverButtonDisabled() {
+        return addDriverButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty addDriverButtonDisabledProperty() {
+        return this.addDriverButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper addDriverButtonDisabledWrapper() {
+        if (this.addDriverButtonDisabled == null) {
+            this.addDriverButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
+        }
+        return this.addDriverButtonDisabled;
+    }
+
+    public final Boolean getCheckOutButtonDisabled() {
+        return checkOutButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty checkOutButtonDisabledProperty() {
+        return this.checkOutButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper checkOutButtonDisabledWrapper() {
+        if (this.checkOutButtonDisabled == null) {
+            this.checkOutButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
+        }
+        return this.checkOutButtonDisabled;
+    }
+
+    public final Boolean getStartButtonDisabled() {
+        return startButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty startButtonDisabledProperty() {
+        return this.startButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper startButtonDisabledWrapper() {
+        if (this.startButtonDisabled == null) {
+            this.startButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
+            final BooleanBinding binding = Bindings.createBooleanBinding(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    return startProperty().get() != null;
+                }
+            }, startProperty());
+            this.startButtonDisabled.bind(binding);
+        }
+        return this.startButtonDisabled;
+    }
+
+    public final Boolean getEndButtonDisabled() {
+        return endButtonDisabledProperty().get();
+    }
+
+    public ReadOnlyBooleanProperty endButtonDisabledProperty() {
+        return this.endButtonDisabledWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyBooleanWrapper endButtonDisabledWrapper() {
+        if (this.endButtonDisabled == null) {
+            this.endButtonDisabled = new ReadOnlyBooleanWrapper(DEFAULT_BUTTON_DISABLED_VALUE);
+            final BooleanBinding binding = Bindings.createBooleanBinding(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    final LocalDateTime end = endProperty().get();
+                    final LocalDateTime start = startProperty().get();
+                    return end != null || start == null;
+                }
+            }, endProperty(), startProperty());
+            this.endButtonDisabled.bind(binding);
+        }
+        return this.endButtonDisabled;
+    }
+
+    public final Person getSelectedPerson() {
+        return selectedPersonProperty().get();
     }
 
     public final String getSelectedPersonName() {
@@ -393,6 +463,13 @@ public class CubeEventModel {
 
     public ReadOnlyStringProperty selectedPersonNameProperty() {
         return selectedPersonNameWrapper().getReadOnlyProperty();
+    }
+
+    private ReadOnlyStringWrapper selectedPersonNameWrapper() {
+        if (this.selectedPersonName == null) {
+            this.selectedPersonName = new ReadOnlyStringWrapper();
+        }
+        return this.selectedPersonName;
     }
 
     public final String getSelectedPersonStreet() {
@@ -447,6 +524,19 @@ public class CubeEventModel {
         return this.stats;
     }
 
+    public void handleAddYouthMemberButtonClicked() {
+        addSelectedPersonWrappedInVisit(getEvent().youthMemberVisitsProperty());
+    }
+
+    private void addSelectedPersonWrappedInVisit(ListProperty<Visit> visits) {
+        Visit visit = new Visit();
+        visit.setPerson(selectedPersonProperty().get());
+        visit.setCheckIn(LocalDateTime.now());
+        visits.add(visit);
+        updateButtonEnablement(selectedPersonProperty().get());
+        updateStatistics();
+    }
+
     public final Event getEvent() {
         return eventProperty().get();
     }
@@ -455,8 +545,16 @@ public class CubeEventModel {
         eventProperty().set(event);
     }
 
-    public void handleAddYouthMemberButtonClicked() {
-        addSelectedPersonWrappedInVisit(getEvent().youthMemberVisitsProperty());
+    public ObjectProperty<Event> eventProperty() {
+        if (this.event == null) {
+            this.event = new SimpleObjectProperty<>();
+            this.event.addListener(eventListChangeListener);
+        }
+        return this.event;
+    }
+
+    private void updateStatistics() {
+        this.stats.update();
     }
 
     public void handleAddYouthStaffButtonClicked() {
@@ -478,18 +576,5 @@ public class CubeEventModel {
         }
         updateButtonEnablement(selectedPersonProperty().get());
         updateStatistics();
-    }
-
-    private void addSelectedPersonWrappedInVisit(ListProperty<Visit> visits) {
-        Visit visit = new Visit();
-        visit.setPerson(selectedPersonProperty().get());
-        visit.setCheckIn(LocalDateTime.now());
-        visits.add(visit);
-        updateButtonEnablement(selectedPersonProperty().get());
-        updateStatistics();
-    }
-
-    private void updateStatistics() {
-        this.stats.update();
     }
 }
