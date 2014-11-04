@@ -1,6 +1,9 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import ch.bziswiler.cube.model.event.Visit;
+import ch.bziswiler.cube.view.DateCellFactory;
+import ch.bziswiler.cube.view.LabelCellFactory;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.fxml.FXML;

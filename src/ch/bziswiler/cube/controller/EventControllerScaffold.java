@@ -1,5 +1,6 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;

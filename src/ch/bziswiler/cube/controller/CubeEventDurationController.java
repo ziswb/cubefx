@@ -2,6 +2,7 @@ package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.CubeFxApp;
 import ch.bziswiler.cube.controller.datepicker.DateTimePickerController;
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.fxml.FXML;

@@ -1,10 +1,11 @@
 package ch.bziswiler.cube;
 
-import ch.bziswiler.cube.controller.CubeEventModel;
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import ch.bziswiler.cube.controller.EventControllerScaffold;
 import javafx.application.Application;
-import javafx.fxml.FXML;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -40,7 +41,7 @@ public class CubeFxApp extends Application {
 
         this.primaryStage = primaryStage;
 
-        HBox root = FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
+        VBox root = FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
         VBox scan = (VBox) loadResourceAndEventController("view/cubeScanMemberLayout.fxml");
         VBox overview = (VBox) loadResourceAndEventController("view/cubeEventOverviewLayout.fxml");
         HBox.setHgrow(scan, Priority.NEVER);
@@ -53,8 +54,9 @@ public class CubeFxApp extends Application {
         primaryStage.setMinWidth(1024);
         primaryStage.setMinHeight(680);
         primaryStage.show();
-        root.getChildren().add(0, scan);
-        root.getChildren().add(1, overview);
+        HBox container = (HBox) root.getChildren().get(1);
+        container.getChildren().add(0, scan);
+        container.getChildren().add(1, overview);
 
         Region duration = (Region) loadResourceAndEventController("view/cubeEventDurationLayout.fxml");
         Region numbers = (Region) loadResourceAndEventController("view/cubeEventNumbersLayout.fxml");

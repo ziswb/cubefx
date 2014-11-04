@@ -1,6 +1,8 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import ch.bziswiler.cube.model.event.KeyValue;
+import ch.bziswiler.cube.model.presentation.EventStatistics;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.fxml.FXML;

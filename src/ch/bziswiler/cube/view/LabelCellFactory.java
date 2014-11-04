@@ -1,4 +1,4 @@
-package ch.bziswiler.cube.controller;
+package ch.bziswiler.cube.view;
 
 import ch.bziswiler.cube.model.event.Visit;
 import javafx.scene.control.Label;

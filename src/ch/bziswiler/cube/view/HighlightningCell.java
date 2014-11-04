@@ -1,4 +1,4 @@
-package ch.bziswiler.cube.controller;
+package ch.bziswiler.cube.view;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Label;

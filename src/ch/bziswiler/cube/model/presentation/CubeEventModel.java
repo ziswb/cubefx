@@ -1,4 +1,4 @@
-package ch.bziswiler.cube.controller;
+package ch.bziswiler.cube.model.presentation;
 
 import ch.bziswiler.cube.model.VisitsUtil;
 import ch.bziswiler.cube.model.address.Address;

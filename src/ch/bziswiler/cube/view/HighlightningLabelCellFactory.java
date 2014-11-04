@@ -1,4 +1,4 @@
-package ch.bziswiler.cube.controller;
+package ch.bziswiler.cube.view;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;

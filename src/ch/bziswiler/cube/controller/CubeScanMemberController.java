@@ -1,5 +1,6 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import ch.bziswiler.cube.model.address.Address;
 import ch.bziswiler.cube.model.address.City;
 import ch.bziswiler.cube.model.event.PersonMetaDataDecorator;

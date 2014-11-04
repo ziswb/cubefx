@@ -1,8 +1,8 @@
 package ch.bziswiler.cube.model;
 
-import ch.bziswiler.cube.controller.CubeEventModel;
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
+import ch.bziswiler.cube.model.presentation.CubeEventModel;
 
 import java.util.List;
 import java.util.Optional;
