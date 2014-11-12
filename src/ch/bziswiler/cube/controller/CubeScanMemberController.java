@@ -19,7 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
 
-public class CubeScanMemberController extends EventControllerScaffold {
+public class CubeScanMemberController extends CubeEventControllerScaffold {
 
     @FXML
     private ComboBox<Person> personCombo;

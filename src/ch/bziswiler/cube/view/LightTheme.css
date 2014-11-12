@@ -1,0 +1,39 @@
+.table-row-cell .new {
+    -fx-background-color: indianred;
+}
+
+#scan-member {
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-border-style: none dashed none none;
+    /*-fx-border-style: top right bottom left;*/
+}
+
+#duration {
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-border-style: none none dashed none;
+}
+
+#numbers {
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-border-style: none none dashed none;
+}
+
+#tables {
+}
+
+#event-details {
+    -fx-background-color: aliceblue;
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-border-style: dotted;
+}
+
+#edit-event-details {
+    -fx-background-color: aliceblue;
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+    -fx-border-style: dotted;
+}

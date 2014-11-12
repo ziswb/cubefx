@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
@@ -9,9 +14,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeScanMemberController">
+
+<VBox id="scan-member" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeScanMemberController">
    <children>
-      <AnchorPane styleClass="background" VBox.vgrow="ALWAYS">
+      <AnchorPane VBox.vgrow="ALWAYS">
          <children>
             <ComboBox fx:id="personCombo" editable="true" layoutX="25.0" layoutY="20.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="330.0" promptText="Find" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <GridPane layoutX="25.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" vgap="11.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="40.0">

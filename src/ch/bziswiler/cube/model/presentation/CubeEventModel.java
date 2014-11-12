@@ -73,20 +73,23 @@ public class CubeEventModel {
     }
 
     protected void eventChanged(Event newValue, Event oldValue) {
-        // TODO clean up bindings -> data saved in "Event" is currently incomplete. e.g. start, end, etc.
         if (oldValue != null) {
-            Bindings.unbindBidirectional(oldValue.driverVisitsProperty(), driverVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
-            Bindings.unbindBidirectional(oldValue.addressProperty(), addressProperty());
+            oldValue.driverVisitsProperty().unbindBidirectional(driverVisitsProperty());
+            oldValue.adultStaffVisitsProperty().unbindBidirectional(adultStaffVisitsProperty());
+            oldValue.youthMemberVisitsProperty().unbindBidirectional(youthMemberVisitsProperty());
+            oldValue.youthStaffVisitsProperty().unbindBidirectional(youthStaffVisitsProperty());
+            oldValue.addressProperty().unbindBidirectional(addressProperty());
+            oldValue.startProperty().unbindBidirectional(startProperty());
+            oldValue.endProperty().unbindBidirectional(endProperty());
         }
         if (newValue != null) {
-            Bindings.bindBidirectional(newValue.driverVisitsProperty(), driverVisitsProperty());
-            Bindings.bindBidirectional(newValue.adultStaffVisitsProperty(), adultStaffVisitsProperty());
-            Bindings.bindBidirectional(newValue.youthMemberVisitsProperty(), youthMemberVisitsProperty());
-            Bindings.bindBidirectional(newValue.youthStaffVisitsProperty(), youthStaffVisitsProperty());
-            Bindings.bindBidirectional(newValue.addressProperty(), addressProperty());
+            newValue.driverVisitsProperty().bindBidirectional(driverVisitsProperty());
+            newValue.adultStaffVisitsProperty().bindBidirectional(adultStaffVisitsProperty());
+            newValue.youthMemberVisitsProperty().bindBidirectional(youthMemberVisitsProperty());
+            newValue.youthStaffVisitsProperty().bindBidirectional(youthStaffVisitsProperty());
+            newValue.addressProperty().bindBidirectional(addressProperty());
+            newValue.startProperty().bindBidirectional(startProperty());
+            newValue.endProperty().bindBidirectional(endProperty());
         }
     }
 

@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-public abstract class EventControllerScaffold implements ChangeListener<CubeEventModel> {
+public abstract class CubeEventControllerScaffold implements ChangeListener<CubeEventModel> {
 
     private ObjectProperty<CubeEventModel> model;
 

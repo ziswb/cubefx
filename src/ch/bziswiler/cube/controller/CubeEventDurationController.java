@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.concurrent.Callable;
 
-public class CubeEventDurationController extends EventControllerScaffold {
+public class CubeEventDurationController extends CubeEventControllerScaffold {
 
     @FXML
     private Label startDateTimeLabel;

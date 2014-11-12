@@ -8,19 +8,27 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox minHeight="657.0" minWidth="1024.0" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeRootLayoutController">
+<VBox minHeight="657.0" minWidth="1024.0" stylesheets="@LightTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.CubeRootLayoutController">
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="Datei">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+              <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Beenden" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="CubeFX">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleShowEventList" text="Anlässe" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem mnemonicParsing="false" onAction="#handleLoadLightTheme" selected="true" text="Light Theme">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="styling" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#handleLoadDarkTheme" text="Dark Theme" toggleGroup="$styling" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="Über CubeFX" />
             </items>
           </Menu>
         </menus>

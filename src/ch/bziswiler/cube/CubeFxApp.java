@@ -1,11 +1,10 @@
 package ch.bziswiler.cube;
 
+import ch.bziswiler.cube.controller.CubeEventControllerScaffold;
+import ch.bziswiler.cube.controller.CubeRootLayoutController;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
-import ch.bziswiler.cube.controller.EventControllerScaffold;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -41,16 +40,14 @@ public class CubeFxApp extends Application {
 
         this.primaryStage = primaryStage;
 
-        VBox root = FXMLLoader.load(getClass().getResource("view/cubeRootLayout.fxml"));
-        VBox scan = (VBox) loadResourceAndEventController("view/cubeScanMemberLayout.fxml");
-        VBox overview = (VBox) loadResourceAndEventController("view/cubeEventOverviewLayout.fxml");
+        VBox root = loadRoot(primaryStage);
+        VBox scan = (VBox) loadResourceAndSetEventOnController("view/cubeScanMemberLayout.fxml");
+        VBox overview = (VBox) loadResourceAndSetEventOnController("view/cubeEventOverviewLayout.fxml");
         HBox.setHgrow(scan, Priority.NEVER);
         HBox.setHgrow(overview, Priority.ALWAYS);
-        overview.setFillWidth(true);
 
         primaryStage.setTitle("Cube FX");
         primaryStage.getIcons().add(new Image("file:resources/images/cube.png"));
-        primaryStage.setScene(new Scene(root));
         primaryStage.setMinWidth(1024);
         primaryStage.setMinHeight(680);
         primaryStage.show();
@@ -58,9 +55,9 @@ public class CubeFxApp extends Application {
         container.getChildren().add(0, scan);
         container.getChildren().add(1, overview);
 
-        Region duration = (Region) loadResourceAndEventController("view/cubeEventDurationLayout.fxml");
-        Region numbers = (Region) loadResourceAndEventController("view/cubeEventNumbersLayout.fxml");
-        Region tables = (Region) loadResourceAndEventController("view/cubeEventTablesLayout.fxml");
+        Region duration = (Region) loadResourceAndSetEventOnController("view/cubeEventDurationLayout.fxml");
+        Region numbers = (Region) loadResourceAndSetEventOnController("view/cubeEventNumbersLayout.fxml");
+        Region tables = (Region) loadResourceAndSetEventOnController("view/cubeEventTablesLayout.fxml");
 
         VBox.setVgrow(duration, Priority.NEVER);
         VBox.setVgrow(numbers, Priority.NEVER);
@@ -70,11 +67,22 @@ public class CubeFxApp extends Application {
         overview.getChildren().add(tables);
     }
 
-    private Object loadResourceAndEventController(String path) throws java.io.IOException {
+    private VBox loadRoot(Stage primaryStage) throws java.io.IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(CubeFxApp.class.getResource("view/cubeRootLayout.fxml"));
+        VBox pane = loader.load();
+        CubeRootLayoutController controller = loader.getController();
+        final Scene scene = new Scene(pane);
+        primaryStage.setScene(scene);
+        controller.setScene(scene);
+        return pane;
+    }
+
+    private Object loadResourceAndSetEventOnController(String path) throws java.io.IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(CubeFxApp.class.getResource(path));
         Object pane = loader.load();
-        EventControllerScaffold controller = loader.getController();
+        CubeEventControllerScaffold controller = loader.getController();
         controller.setModel(EVENT);
         return pane;
     }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox stylesheets="@LightTheme.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.eventlist.CubeEventListController">
+   <children>
+      <HBox>
+         <children>
+            <Label layoutX="0.1463414579629898" text="Anlässe" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <ChoiceBox maxWidth="90.0" minWidth="90.0">
+               <HBox.margin>
+                  <Insets right="2.0" />
+               </HBox.margin>
+            </ChoiceBox>
+            <Button mnemonicParsing="false" text="A">
+               <HBox.margin>
+                  <Insets right="2.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="V">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#handleAddEvent" text="+">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin></Button>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="7.0" right="7.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <ListView fx:id="eventList" editable="true" minWidth="300.0" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </ListView>
+      <HBox>
+         <children>
+            <Button mnemonicParsing="false" text="Abbrechen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="7.0" right="7.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>

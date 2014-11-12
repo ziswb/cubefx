@@ -14,7 +14,7 @@ import javafx.scene.control.TitledPane;
 
 import java.time.LocalDateTime;
 
-public class CubeEventTablesController extends EventControllerScaffold {
+public class CubeEventTablesController extends CubeEventControllerScaffold {
 
     @FXML
     private Accordion accordion;

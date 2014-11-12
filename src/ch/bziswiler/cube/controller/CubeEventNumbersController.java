@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-public class CubeEventNumbersController extends EventControllerScaffold {
+public class CubeEventNumbersController extends CubeEventControllerScaffold {
 
     @FXML
     private Label numberOfPresentYouthMembers;
