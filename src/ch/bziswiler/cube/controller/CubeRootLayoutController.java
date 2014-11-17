@@ -1,6 +1,7 @@
 package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.CubeFxApp;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,7 +16,6 @@ import java.io.IOException;
 
 public class CubeRootLayoutController {
 
-    private Scene scene;
     private String darkThemeUrl = getClass().getResource("../view/DarkTheme.css").toExternalForm();
     private String lightThemeUrl = getClass().getResource("../view/LightTheme.css").toExternalForm();
 
@@ -26,12 +26,12 @@ public class CubeRootLayoutController {
     }
 
     private boolean removeTheme(String themeUrl) {
-        return scene.getStylesheets().remove(themeUrl);
+        return getScene().getStylesheets().remove(themeUrl);
     }
 
     private void setTheme(String themeUrl) {
-        if (!scene.getStylesheets().contains(themeUrl)) {
-            scene.getStylesheets().add(themeUrl);
+        if (!getScene().getStylesheets().contains(themeUrl)) {
+            getScene().getStylesheets().add(themeUrl);
         }
     }
 
@@ -72,15 +72,12 @@ public class CubeRootLayoutController {
         dialogStage.initOwner(CubeFxApp.getInstance().getPrimaryStage());
         dialogStage.getIcons().add(new Image("file:resources/images/edit.png"));
         final Scene scene = new Scene(page);
+        scene.getStylesheets().addAll(getScene().getStylesheets());
         dialogStage.setScene(scene);
         return dialogStage;
     }
 
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    private Scene getScene() {
+        return CubeFxApp.getInstance().getPrimaryStage().getScene();
     }
 }

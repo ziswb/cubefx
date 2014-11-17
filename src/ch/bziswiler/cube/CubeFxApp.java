@@ -40,12 +40,14 @@ public class CubeFxApp extends Application {
 
         this.primaryStage = primaryStage;
 
-        VBox root = loadRoot(primaryStage);
+        VBox root = loadRoot();
         VBox scan = (VBox) loadResourceAndSetEventOnController("view/cubeScanMemberLayout.fxml");
         VBox overview = (VBox) loadResourceAndSetEventOnController("view/cubeEventOverviewLayout.fxml");
         HBox.setHgrow(scan, Priority.NEVER);
         HBox.setHgrow(overview, Priority.ALWAYS);
 
+        final Scene scene = new Scene(root);
+        primaryStage.setScene(scene);
         primaryStage.setTitle("Cube FX");
         primaryStage.getIcons().add(new Image("file:resources/images/cube.png"));
         primaryStage.setMinWidth(1024);
@@ -67,14 +69,10 @@ public class CubeFxApp extends Application {
         overview.getChildren().add(tables);
     }
 
-    private VBox loadRoot(Stage primaryStage) throws java.io.IOException {
+    private VBox loadRoot() throws java.io.IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(CubeFxApp.class.getResource("view/cubeRootLayout.fxml"));
         VBox pane = loader.load();
-        CubeRootLayoutController controller = loader.getController();
-        final Scene scene = new Scene(pane);
-        primaryStage.setScene(scene);
-        controller.setScene(scene);
         return pane;
     }
 
