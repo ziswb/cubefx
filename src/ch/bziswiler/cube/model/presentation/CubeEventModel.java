@@ -10,7 +10,6 @@ import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -21,7 +20,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -67,7 +65,7 @@ public class CubeEventModel {
     private ObjectProperty<Event> event;
     private ChangeListener<Event> eventListChangeListener;
     private StringProperty name;
-    private BooleanProperty editing;
+    private ObjectProperty editMode;
 
     public CubeEventModel(Event event) {
         this.eventListChangeListener = (observable, oldValue, newValue) -> eventChanged(newValue, oldValue);
@@ -101,19 +99,19 @@ public class CubeEventModel {
         }
     }
 
-    public final Boolean isEditing() {
-        return editingProperty().get();
+    public final EditMode getEditMode() {
+        return editModeProperty().get();
     }
 
-    public BooleanProperty editingProperty() {
-        if (this.editing == null) {
-            this.editing = new SimpleBooleanProperty();
+    public ObjectProperty<EditMode> editModeProperty() {
+        if (this.editMode == null) {
+            this.editMode = new SimpleObjectProperty<>(EditMode.DEFAULT);
         }
-        return this.editing;
+        return this.editMode;
     }
 
-    public final void setEditing(Boolean isEditing) {
-        editingProperty().set(isEditing);
+    public final void setEditMode(EditMode editMode) {
+        editModeProperty().set(editMode);
     }
 
     public final String getName() {
@@ -620,5 +618,9 @@ public class CubeEventModel {
         }
         updateButtonEnablement(selectedPersonProperty().get());
         updateStatistics();
+    }
+
+    public enum EditMode {
+        EDIT_REQUESTED, EDITING, COMMITED, CANCELLED, DEFAULT
     }
 }

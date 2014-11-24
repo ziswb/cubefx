@@ -4,6 +4,7 @@ import ch.bziswiler.cube.model.address.Address;
 import ch.bziswiler.cube.model.address.City;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.fxml.FXML;
+import javafx.scene.control.Cell;
 import javafx.scene.control.TextField;
 
 public class AddEventController {
@@ -19,29 +20,22 @@ public class AddEventController {
     @FXML
     private TextField zip;
 
-    private boolean ok;
     private CubeEventModel event;
-    private AddDialogEventListener listener;
+    private Cell<CubeEventModel> cell;
 
     @FXML
     private void handleSave() {
-        this.ok = true;
-        this.event.setEditing(false);
-        if (this.listener != null) {
-            this.listener.handleEventCreated(event);
+        if (this.cell != null) {
+            this.cell.commitEdit(event);
         }
     }
 
     @FXML
     private void handleCancel() {
-        this.ok = false;
-        if (this.listener != null) {
-            this.listener.handleEventCreationCancelled(event);
+        this.event.setEditMode(CubeEventModel.EditMode.CANCELLED);
+        if (this.cell != null) {
+            this.cell.cancelEdit();
         }
-    }
-
-    public boolean isOk() {
-        return ok;
     }
 
     public CubeEventModel getEvent() {
@@ -63,7 +57,7 @@ public class AddEventController {
         this.city.textProperty().bindBidirectional(event.addressProperty().get().cityProperty().get().nameProperty());
     }
 
-    public void setListener(AddDialogEventListener listener) {
-        this.listener = listener;
+    public void setCell(Cell<CubeEventModel> cell) {
+        this.cell = cell;
     }
 }

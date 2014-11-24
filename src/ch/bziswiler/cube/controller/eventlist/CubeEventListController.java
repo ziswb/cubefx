@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 
-public class CubeEventListController implements AddDialogEventListener {
+public class CubeEventListController {
 
     private final ObservableList<CubeEventModel> items = FXCollections.observableArrayList();
     @FXML
@@ -96,7 +96,7 @@ public class CubeEventListController implements AddDialogEventListener {
                 return "New";
             }
         });
-        newEvent.setEditing(true);
+        newEvent.setEditMode(CubeEventModel.EditMode.EDIT_REQUESTED);
         items.add(0, newEvent);
         eventList.setItems(items);
         eventList.getSelectionModel().select(newEvent);
@@ -109,17 +109,6 @@ public class CubeEventListController implements AddDialogEventListener {
 
     public boolean isOK() {
         return ok;
-    }
-
-    @Override
-    public void handleEventCreated(CubeEventModel model) {
-        this.eventList.setItems(FXCollections.observableArrayList(items));
-    }
-
-    @Override
-    public void handleEventCreationCancelled(CubeEventModel model) {
-        items.remove(model);
-        this.eventList.setItems(items);
     }
 
     private class EventDetailsListCell extends ListCell<CubeEventModel> {
@@ -137,16 +126,43 @@ public class CubeEventListController implements AddDialogEventListener {
             if (item == null) {
                 return;
             }
-            if (item.isEditing()) {
-                final FXMLLoader loader = loadResouce("../../view/cubeEventEditDetails.fxml");
-                final AddEventController controller = loader.getController();
-                controller.setEvent(item);
-                controller.setListener(CubeEventListController.this);
-                startEdit();
-            } else {
-                loadResouce("../../view/cubeEventDetails.fxml");
+            switch (item.getEditMode()) {
+                case EDITING:
+                case EDIT_REQUESTED:
+                    item.setEditMode(CubeEventModel.EditMode.EDITING);
+                    startEdit(item);
+                    break;
+                case CANCELLED:
+                    setText(null);
+                    setGraphic(null);
+                    items.remove(item);
+                    eventList.setItems(items);
+                    return;
+                case COMMITED:
+                case DEFAULT:
+                default:
+                    loadResouce("../../view/cubeEventDetails.fxml");
+                    break;
+
             }
             setGraphic(node);
+        }
+
+        private void startEdit(CubeEventModel item) {
+            if (!isEditable()) {
+                return;
+            }
+            if (!eventList.isEditable()) {
+                return;
+            }
+            super.startEdit();
+            if (!isEditing()) {
+                return;
+            }
+            final FXMLLoader loader = loadResouce("../../view/cubeEventEditDetails.fxml");
+            final AddEventController controller = loader.getController();
+            controller.setEvent(item);
+            controller.setCell(this);
         }
 
         private FXMLLoader loadResouce(String resource) {
@@ -163,17 +179,15 @@ public class CubeEventListController implements AddDialogEventListener {
         }
 
         @Override
-        public void startEdit() {
-            super.startEdit();
-            if (!isEditable()) {
-                return;
-            }
-            if (!eventList.isEditable()) {
-                return;
-            }
-            if (isEditing()) {
-                System.out.println("isEditing() = " + true);
-            }
+        public void commitEdit(CubeEventModel newValue) {
+            newValue.setEditMode(CubeEventModel.EditMode.COMMITED);
+            EventDAO.INSTANCE.addEvent(newValue.getEvent());
+            super.commitEdit(newValue);
+        }
+
+        @Override
+        public void cancelEdit() {
+            super.cancelEdit();
         }
 
     }
