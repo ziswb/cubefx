@@ -1,42 +1,82 @@
 package ch.bziswiler.cube.model.address;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class City {
 
-    private String name;
-    private String zip;
-    private String state;
-    private String country;
+    private StringProperty name;
+    private StringProperty zip;
+    private StringProperty state;
+    private StringProperty country;
 
-    public String getName() {
-        return name;
+    public final String getName() {
+        return nameProperty().get();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public StringProperty nameProperty() {
+        if (this.name == null) {
+            this.name = new SimpleStringProperty();
+        }
+        return this.name;
     }
 
-    public String getZip() {
-        return zip;
+    public final void setName(String name) {
+        this.nameProperty().set(name);
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public final String getZip() {
+        return zipProperty().get();
     }
 
-    public String getState() {
-        return state;
+    public StringProperty zipProperty() {
+        if (this.zip == null) {
+            this.zip = new SimpleStringProperty();
+        }
+        return this.zip;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public final void setZip(String zip) {
+        this.zipProperty().set(zip);
     }
 
-    public String getCountry() {
-        return country;
+    public final String getState() {
+        return stateProperty().get();
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public StringProperty stateProperty() {
+        if (this.state == null) {
+            this.state = new SimpleStringProperty();
+        }
+        return this.state;
+    }
+
+    public final void setState(String state) {
+        this.stateProperty().set(state);
+    }
+
+    public final String getCountry() {
+        return countryProperty().get();
+    }
+
+    public StringProperty countryProperty() {
+        if (this.country == null) {
+            this.country = new SimpleStringProperty();
+        }
+        return this.country;
+    }
+
+    public final void setCountry(String country) {
+        this.countryProperty().set(country);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (zip != null ? zip.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -61,14 +101,5 @@ public class City {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (zip != null ? zip.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        return result;
     }
 }

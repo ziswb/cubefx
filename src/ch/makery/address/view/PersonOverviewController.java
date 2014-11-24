@@ -37,7 +37,7 @@ public class PersonOverviewController {
 
     /**
      * The constructor.
-     * The constructor is called before the initialize() method.
+     * The constructor is called before the initializeModel() method.
      */
     public PersonOverviewController() {
     }

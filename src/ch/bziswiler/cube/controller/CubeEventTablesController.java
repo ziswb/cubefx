@@ -2,6 +2,7 @@ package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import ch.bziswiler.cube.model.event.Visit;
+import ch.bziswiler.cube.model.presentation.PaneExpander;
 import ch.bziswiler.cube.view.DateCellFactory;
 import ch.bziswiler.cube.view.LabelCellFactory;
 import javafx.application.Platform;
@@ -72,8 +73,8 @@ public class CubeEventTablesController extends CubeEventControllerScaffold {
     private PaneExpander adultStaffPaneExpander;
     private PaneExpander driversPaneExpander;
 
-    @FXML
-    private void initialize() {
+    @Override
+    protected void doInitialize() {
         initializeYouthMembersTable();
         initializeYouthStaffTable();
         initializeDriversTable();
@@ -167,7 +168,7 @@ public class CubeEventTablesController extends CubeEventControllerScaffold {
     }
 
     @Override
-    protected void initialize(CubeEventModel event) {
+    protected void initializeModel(CubeEventModel event) {
         final ListProperty<Visit> youthMemberVisits = event.youthMemberVisitsProperty();
         final ListProperty<Visit> youthStaffVisits = event.youthStaffVisitsProperty();
         final ListProperty<Visit> adultStaffVisits = event.adultStaffVisitsProperty();
@@ -185,7 +186,7 @@ public class CubeEventTablesController extends CubeEventControllerScaffold {
     }
 
     @Override
-    public void dispose(CubeEventModel event) {
+    public void disposeModel(CubeEventModel event) {
         event.youthMemberVisitsProperty().removeListener(youthMemberPaneExpander);
         event.youthStaffVisitsProperty().removeListener(youthStaffPaneExpander);
         event.adultStaffVisitsProperty().removeListener(adultStaffPaneExpander);

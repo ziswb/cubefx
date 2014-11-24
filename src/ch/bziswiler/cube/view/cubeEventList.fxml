@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -23,20 +24,34 @@
                </HBox.margin>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <ChoiceBox maxWidth="90.0" minWidth="90.0">
+            <ChoiceBox fx:id="sortFieldChoice" maxWidth="90.0" minWidth="90.0">
                <HBox.margin>
                   <Insets right="2.0" />
                </HBox.margin>
             </ChoiceBox>
-            <Button mnemonicParsing="false" text="A">
+            <Button fx:id="sortUpButton" mnemonicParsing="false" onMouseClicked="#handleSortAscending" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets right="2.0" />
                </HBox.margin>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/images/16Px_051_Arrow_Up.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
-            <Button mnemonicParsing="false" text="V">
+            <Button mnemonicParsing="false" onMouseClicked="#handleSortDescending" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets right="5.0" />
                </HBox.margin>
+               <graphic>
+                  <ImageView pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/images/16Px_049_Arrow_Down.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
             <Button mnemonicParsing="false" onAction="#handleAddEvent" text="+">
                <HBox.margin>
@@ -54,9 +69,9 @@
       </ListView>
       <HBox>
          <children>
-            <Button mnemonicParsing="false" text="Abbrechen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleCancel" text="Abbrechen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
             <Region HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Button mnemonicParsing="false" onMouseClicked="#handleOk" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
          <VBox.margin>
             <Insets bottom="5.0" left="7.0" right="7.0" top="5.0" />

@@ -1,7 +1,6 @@
 package ch.bziswiler.cube.model.presentation;
 
-import ch.bziswiler.cube.controller.RemoveDuplicatePersonsPredicate;
-import ch.bziswiler.cube.model.presentation.CubeEventModel;
+import ch.bziswiler.cube.model.RemoveDuplicatePersonsPredicate;
 import ch.bziswiler.cube.model.address.City;
 import ch.bziswiler.cube.model.event.KeyValue;
 import ch.bziswiler.cube.model.event.Visit;

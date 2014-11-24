@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 public class CubeFxApp extends Application {
 
-    public static final CubeEventModel EVENT = new CubeEventModel();
     private static CubeFxApp INSTANCE;
     private Stage primaryStage;
 
@@ -80,8 +79,8 @@ public class CubeFxApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(CubeFxApp.class.getResource(path));
         Object pane = loader.load();
-        CubeEventControllerScaffold controller = loader.getController();
-        controller.setModel(EVENT);
+//        CubeEventControllerScaffold controller = loader.getController();
+//        controller.setModel(EVENT);
         return pane;
     }
 }

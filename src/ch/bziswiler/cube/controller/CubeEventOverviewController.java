@@ -4,12 +4,17 @@ import ch.bziswiler.cube.model.presentation.CubeEventModel;
 
 public class CubeEventOverviewController extends CubeEventControllerScaffold {
     @Override
-    protected void initialize(CubeEventModel newValue) {
+    protected void initializeModel(CubeEventModel newValue) {
         // nop
     }
 
     @Override
-    protected void dispose(CubeEventModel oldValue) {
+    protected void disposeModel(CubeEventModel oldValue) {
+        // nop
+    }
+
+    @Override
+    protected void doInitialize() {
         // nop
     }
 }

@@ -5,6 +5,7 @@ import ch.bziswiler.cube.controller.datepicker.DateTimePickerController;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -37,22 +39,30 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
     private Button endButton;
 
     @Override
-    protected void dispose(CubeEventModel oldValue) {
+    protected void doInitialize() {
+        // nop
+    }
+
+    @Override
+    protected void disposeModel(CubeEventModel oldValue) {
         this.endButton.disableProperty().unbind();
         this.startButton.disableProperty().unbind();
-        this.startDateTimeLabel.textProperty().unbindBidirectional(oldValue.startProperty());
+        this.startDateTimeLabel.textProperty().unbind();
         this.endDateTimeLabel.textProperty().unbindBidirectional(oldValue.endProperty());
         this.durationLabel.textProperty().unbind();
     }
 
     @Override
-    protected void initialize(CubeEventModel newValue) {
+    protected void initializeModel(CubeEventModel newValue) {
 
         this.endButton.disableProperty().bind(getModel().endButtonDisabledProperty());
         this.startButton.disableProperty().bind(getModel().startButtonDisabledProperty());
 
-        this.startDateTimeLabel.textProperty().bindBidirectional(newValue.startProperty(), new LocalDateTimeStringConverter());
-        this.endDateTimeLabel.textProperty().bindBidirectional(newValue.endProperty(), new LocalDateTimeStringConverter());
+        final StringBinding startBinding = Bindings.createStringBinding(new LocalDateTimeToStringCallable(newValue.startProperty()), newValue.startProperty());
+        final StringBinding endBinding = Bindings.createStringBinding(new LocalDateTimeToStringCallable(newValue.endProperty()), newValue.endProperty());
+
+        this.startDateTimeLabel.textProperty().bind(startBinding);
+        this.endDateTimeLabel.textProperty().bind(endBinding);
 
         final StringBinding hoursBinding = Bindings.createStringBinding(new Callable<String>() {
             @Override
@@ -142,6 +152,23 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
         dialog.showAndWait();
         if (controller.isOk()) {
             getModel().setEnd(controller.getPickedDateTime());
+        }
+    }
+
+    private static class LocalDateTimeToStringCallable implements Callable<String> {
+
+        private final ObjectProperty<LocalDateTime> property;
+
+        public LocalDateTimeToStringCallable(ObjectProperty<LocalDateTime> property) {
+            this.property = property;
+        }
+
+        @Override
+        public String call() throws Exception {
+            if (property.get() == null) {
+                return "--.--.---- --:--";
+            }
+            return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(property.get());
         }
     }
 

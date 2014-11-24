@@ -10,6 +10,7 @@ import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
@@ -20,8 +21,11 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -62,35 +66,69 @@ public class CubeEventModel {
     private ListProperty<Visit> driverVisits;
     private ObjectProperty<Event> event;
     private ChangeListener<Event> eventListChangeListener;
+    private StringProperty name;
+    private BooleanProperty editing;
 
-    public CubeEventModel() {
+    public CubeEventModel(Event event) {
         this.eventListChangeListener = (observable, oldValue, newValue) -> eventChanged(newValue, oldValue);
-        // TODO resolve event dependency
-        eventProperty().set(new Event());
-        this.stats = new EventStatistics(this);
         this.duration.startProperty().bind(startProperty());
         this.duration.endProperty().bind(endProperty());
+        this.stats = new EventStatistics(this);
+        eventProperty().set(event);
     }
 
     protected void eventChanged(Event newValue, Event oldValue) {
         if (oldValue != null) {
-            oldValue.driverVisitsProperty().unbindBidirectional(driverVisitsProperty());
-            oldValue.adultStaffVisitsProperty().unbindBidirectional(adultStaffVisitsProperty());
-            oldValue.youthMemberVisitsProperty().unbindBidirectional(youthMemberVisitsProperty());
-            oldValue.youthStaffVisitsProperty().unbindBidirectional(youthStaffVisitsProperty());
-            oldValue.addressProperty().unbindBidirectional(addressProperty());
-            oldValue.startProperty().unbindBidirectional(startProperty());
-            oldValue.endProperty().unbindBidirectional(endProperty());
+            driverVisitsProperty().unbind();
+            adultStaffVisitsProperty().unbind();
+            youthMemberVisitsProperty().unbind();
+            youthStaffVisitsProperty().unbind();
+            addressProperty().unbindBidirectional(oldValue.addressProperty());
+            startProperty().unbindBidirectional(oldValue.startProperty());
+            endProperty().unbindBidirectional(oldValue.endProperty());
+            nameProperty().unbindBidirectional(oldValue.nameProperty());
         }
         if (newValue != null) {
-            newValue.driverVisitsProperty().bindBidirectional(driverVisitsProperty());
-            newValue.adultStaffVisitsProperty().bindBidirectional(adultStaffVisitsProperty());
-            newValue.youthMemberVisitsProperty().bindBidirectional(youthMemberVisitsProperty());
-            newValue.youthStaffVisitsProperty().bindBidirectional(youthStaffVisitsProperty());
-            newValue.addressProperty().bindBidirectional(addressProperty());
-            newValue.startProperty().bindBidirectional(startProperty());
-            newValue.endProperty().bindBidirectional(endProperty());
+            driverVisitsProperty().bind(newValue.driverVisitsProperty());
+            adultStaffVisitsProperty().bind(newValue.adultStaffVisitsProperty());
+            youthMemberVisitsProperty().bind(newValue.youthMemberVisitsProperty());
+            youthStaffVisitsProperty().bind(newValue.youthStaffVisitsProperty());
+            addressProperty().bindBidirectional(newValue.addressProperty());
+            startProperty().bindBidirectional(newValue.startProperty());
+            endProperty().bindBidirectional(newValue.endProperty());
+            nameProperty().bindBidirectional(newValue.nameProperty());
+            this.stats.update();
         }
+    }
+
+    public final Boolean isEditing() {
+        return editingProperty().get();
+    }
+
+    public BooleanProperty editingProperty() {
+        if (this.editing == null) {
+            this.editing = new SimpleBooleanProperty();
+        }
+        return this.editing;
+    }
+
+    public final void setEditing(Boolean isEditing) {
+        editingProperty().set(isEditing);
+    }
+
+    public final String getName() {
+        return nameProperty().get();
+    }
+
+    public StringProperty nameProperty() {
+        if (this.name == null) {
+            this.name = new SimpleStringProperty();
+        }
+        return this.name;
+    }
+
+    public final void setName(String name) {
+        nameProperty().set(name);
     }
 
     public ObjectProperty<LocalDateTime> startProperty() {
@@ -119,7 +157,7 @@ public class CubeEventModel {
         return this.end;
     }
 
-    public final Address geAddress() {
+    public final Address getAddress() {
         return addressProperty().get();
     }
 
@@ -297,6 +335,9 @@ public class CubeEventModel {
 
     private void updateButtonEnablement(Person selectedPerson) {
         disableAllButtons();
+        if (getEvent() == null) {
+            return;
+        }
         if (selectedPerson == null) {
             return;
         }
@@ -424,9 +465,9 @@ public class CubeEventModel {
             final BooleanBinding binding = Bindings.createBooleanBinding(new Callable<Boolean>() {
                 @Override
                 public Boolean call() throws Exception {
-                    return startProperty().get() != null;
+                    return getEvent() != null && startProperty().get() != null;
                 }
-            }, startProperty());
+            }, startProperty(), eventProperty());
             this.startButtonDisabled.bind(binding);
         }
         return this.startButtonDisabled;
@@ -448,9 +489,9 @@ public class CubeEventModel {
                 public Boolean call() throws Exception {
                     final LocalDateTime end = endProperty().get();
                     final LocalDateTime start = startProperty().get();
-                    return end != null || start == null;
+                    return getEvent() != null && (end != null || start == null);
                 }
-            }, endProperty(), startProperty());
+            }, endProperty(), startProperty(), eventProperty());
             this.endButtonDisabled.bind(binding);
         }
         return this.endButtonDisabled;

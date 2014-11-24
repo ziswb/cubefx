@@ -43,8 +43,8 @@ public class CubeEventNumbersController extends CubeEventControllerScaffold {
     private ReadOnlyIntegerWrapper numberOfAllAdultStaffProperty = new ReadOnlyIntegerWrapper();
     private ReadOnlyIntegerWrapper numberOfAllDriversProperty = new ReadOnlyIntegerWrapper();
 
-    @FXML
-    private void initialize() {
+    @Override
+    protected void doInitialize() {
         final NumberBinding numberOfPresentYouthMembersBinding = this.numberOfPresentYouthMembersProperty.add(this.numberOfPresentYouthStaffProperty);
         this.numberOfPresentYouthMembers.textProperty().bind(numberOfPresentYouthMembersBinding.asString());
 
@@ -72,7 +72,7 @@ public class CubeEventNumbersController extends CubeEventControllerScaffold {
     }
 
     @Override
-    protected void initialize(CubeEventModel newValue) {
+    protected void initializeModel(CubeEventModel newValue) {
         final EventStatistics stats = newValue.getStats();
         this.numberOfPresentYouthMembersProperty.bind(stats.numberOfPresentYouthMembersProperty());
         this.numberOfPresentYouthStaffProperty.bind(stats.numberOfPresentYouthStaffProperty());
@@ -86,7 +86,7 @@ public class CubeEventNumbersController extends CubeEventControllerScaffold {
     }
 
     @Override
-    protected void dispose(CubeEventModel oldValue) {
+    protected void disposeModel(CubeEventModel oldValue) {
         this.numberOfPresentYouthMembersProperty.unbind();
         this.numberOfPresentYouthStaffProperty.unbind();
         this.numberOfAllYouthMembersProperty.unbind();

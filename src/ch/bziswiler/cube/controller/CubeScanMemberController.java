@@ -9,6 +9,8 @@ import ch.bziswiler.cube.model.person.IntegerPersonId;
 import ch.bziswiler.cube.model.person.Person;
 import ch.bziswiler.cube.model.person.PersonId;
 import com.google.common.collect.Lists;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -46,14 +48,18 @@ public class CubeScanMemberController extends CubeEventControllerScaffold {
 
     private ObservableList<Person> personData = FXCollections.observableArrayList();
 
-    protected void initialize(CubeEventModel newValue) {
+    @Override
+    protected void doInitialize() {
         createExampleData();
         initializeCombo();
+    }
+
+    protected void initializeModel(CubeEventModel newValue) {
         createBindings();
     }
 
     @Override
-    protected void dispose(CubeEventModel oldValue) {
+    protected void disposeModel(CubeEventModel oldValue) {
         getModel().selectedPersonProperty().unbind();
         addDriverButton.disableProperty().unbind();
         addAdultStaffButton.disableProperty().unbind();
@@ -107,6 +113,12 @@ public class CubeScanMemberController extends CubeEventControllerScaffold {
         this.personCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (oldValue != null && newValue == null) {
                 personCombo.setValue(oldValue);
+            }
+        });
+        this.personCombo.getEditor().focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                personCombo.getEditor().selectAll();
             }
         });
     }

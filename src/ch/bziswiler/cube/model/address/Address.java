@@ -12,14 +12,14 @@ public class Address {
     private ObjectProperty<City> city = new SimpleObjectProperty<City>();
 
     public final String getStreetName() {
-        return streetName.get();
+        return streetNameProperty().get();
     }
 
     public final void setStreetName(String streetName) {
         streetNameProperty().set(streetName);
     }
 
-    private StringProperty streetNameProperty() {
+    public StringProperty streetNameProperty() {
         if (this.streetName == null) {
             this.streetName = new SimpleStringProperty();
         }
@@ -27,14 +27,14 @@ public class Address {
     }
 
     public final String getAddition() {
-        return addition.get();
+        return additionProperty().get();
     }
 
     public final void setAddition(String addition) {
         additionProperty().set(addition);
     }
 
-    private StringProperty additionProperty() {
+    public StringProperty additionProperty() {
         if (this.addition == null) {
             this.addition = new SimpleStringProperty();
         }

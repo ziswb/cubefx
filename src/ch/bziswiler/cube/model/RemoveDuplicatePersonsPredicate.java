@@ -1,4 +1,4 @@
-package ch.bziswiler.cube.controller;
+package ch.bziswiler.cube.model;
 
 import ch.bziswiler.cube.model.event.Visit;
 import ch.bziswiler.cube.model.person.Person;

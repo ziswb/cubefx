@@ -1,10 +1,12 @@
 package ch.bziswiler.cube.controller;
 
+import ch.bziswiler.cube.data.CubeEventModelSelectionProvider;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXML;
 
 public abstract class CubeEventControllerScaffold implements ChangeListener<CubeEventModel> {
 
@@ -13,16 +15,24 @@ public abstract class CubeEventControllerScaffold implements ChangeListener<Cube
     @Override
     public void changed(ObservableValue<? extends CubeEventModel> observable, CubeEventModel oldValue, CubeEventModel newValue) {
         if (oldValue != null) {
-            dispose(oldValue);
+            disposeModel(oldValue);
         }
         if (newValue != null) {
-            initialize(newValue);
+            initializeModel(newValue);
         }
     }
 
-    protected abstract void dispose(CubeEventModel oldValue);
+    @FXML
+    public void initialize() {
+        CubeEventModelSelectionProvider.INSTANCE.addListener(this);
+        doInitialize();
+    }
 
-    protected abstract void initialize(CubeEventModel newValue);
+    protected abstract void doInitialize();
+
+    protected abstract void disposeModel(CubeEventModel oldValue);
+
+    protected abstract void initializeModel(CubeEventModel newValue);
 
     public final CubeEventModel getModel() {
         return getModelProperty().get();

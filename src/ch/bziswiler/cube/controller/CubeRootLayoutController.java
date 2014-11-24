@@ -1,6 +1,8 @@
 package ch.bziswiler.cube.controller;
 
 import ch.bziswiler.cube.CubeFxApp;
+import ch.bziswiler.cube.controller.eventlist.CubeEventListController;
+import ch.bziswiler.cube.data.CubeEventModelSelectionProvider;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,8 +61,12 @@ public class CubeRootLayoutController {
     private void handleShowEventList() throws IOException {
         final FXMLLoader loader = new FXMLLoader();
         final Stage dialog = loadModalEventListDialog(loader);
-//        final DateTimePickerController controller = loader.getController();
+        final CubeEventListController controller = loader.getController();
+        controller.setDialogStage(dialog);
         dialog.showAndWait();
+        if (controller.isOK()) {
+            CubeEventModelSelectionProvider.INSTANCE.setSelectedEvent(controller.getSelectedEvent());
+        }
     }
 
     private Stage loadModalEventListDialog(FXMLLoader loader) throws IOException {
