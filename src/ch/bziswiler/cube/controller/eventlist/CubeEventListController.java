@@ -3,6 +3,7 @@ package ch.bziswiler.cube.controller.eventlist;
 import ch.bziswiler.cube.data.EventDAO;
 import ch.bziswiler.cube.model.event.Event;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -18,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 public class CubeEventListController {
 
@@ -25,7 +28,16 @@ public class CubeEventListController {
     @FXML
     private ListView<CubeEventModel> eventList;
     @FXML
-    private ChoiceBox<String> sortFieldChoice;
+    private ChoiceBox<CubeEventModelComparator.SortField> sortFieldChoice;
+    @FXML
+    private Button sortUpButton;
+    @FXML
+    private Button sortDownButton;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Button okButton;
+
     private Stage dialogStage;
     private CubeEventModel selectedEvent;
     private boolean ok;
@@ -53,8 +65,11 @@ public class CubeEventListController {
             items.add(event(event));
         }
         this.eventList.setItems(items);
-        sortFieldChoice.setItems(FXCollections.observableArrayList("Start", "End", "Ort"));
+        sortFieldChoice.setItems(FXCollections.observableArrayList(CubeEventModelComparator.SortField.values()));
         sortFieldChoice.getSelectionModel().select(0);
+        this.sortUpButton.disableProperty().bind(Bindings.createBooleanBinding(new HasItemsCallable(), this.eventList.getSelectionModel().selectedItemProperty()));
+        this.sortDownButton.disableProperty().bind(Bindings.createBooleanBinding(new HasItemsCallable(), this.eventList.getSelectionModel().selectedItemProperty()));
+        this.okButton.disableProperty().bind(Bindings.createBooleanBinding(new HasSelectionCallable(), this.eventList.getSelectionModel().selectedItemProperty()));
     }
 
     private CubeEventModel event(final Event event) {
@@ -68,12 +83,25 @@ public class CubeEventListController {
 
     @FXML
     private void handleSortAscending() {
-        eventList.getItems().sort(new CubeEventModelComparator(-1));
+        eventList.setItems(
+                eventList.getItems().sorted(
+                        new CubeEventModelComparator(
+                                sortFieldChoice.getSelectionModel().getSelectedItem(),
+                                CubeEventModelComparator.SortDirection.ASC)
+                )
+        );
     }
 
     @FXML
     private void handleSortDescending() {
-        eventList.getItems().sort(new CubeEventModelComparator(1));
+        eventList.setItems(
+                eventList.getItems().sorted(
+                        new CubeEventModelComparator(
+                                sortFieldChoice.getSelectionModel().getSelectedItem(),
+                                CubeEventModelComparator.SortDirection.DESC
+                        )
+                )
+        );
     }
 
     @FXML
@@ -141,7 +169,9 @@ public class CubeEventListController {
                 case COMMITED:
                 case DEFAULT:
                 default:
-                    loadResouce("../../view/cubeEventDetails.fxml");
+                    final FXMLLoader loader = loadResouce("../../view/cubeEventDetails.fxml");
+                    final ShowEventDetailsController controller = loader.getController();
+                    controller.setEvent(item);
                     break;
 
             }
@@ -190,5 +220,19 @@ public class CubeEventListController {
             super.cancelEdit();
         }
 
+    }
+
+    private class HasSelectionCallable implements Callable<Boolean> {
+        @Override
+        public Boolean call() throws Exception {
+            return eventList.getSelectionModel().selectedItemProperty().get() == null;
+        }
+    }
+
+    private class HasItemsCallable implements Callable<Boolean> {
+        @Override
+        public Boolean call() throws Exception {
+            return items.size() == 0;
+        }
     }
 }

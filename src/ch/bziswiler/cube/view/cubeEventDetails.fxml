@@ -5,30 +5,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="event-details" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="event-details" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.bziswiler.cube.controller.eventlist.ShowEventDetailsController">
    <children>
       <GridPane hgap="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label text="Jugendliche" GridPane.rowIndex="4" />
-            <Label text="4" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="numberOfYouths" text="4" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Erwachsene" GridPane.rowIndex="5" />
-            <Label text="2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="numberOfAdults" text="2" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="Start" GridPane.rowIndex="7" />
-            <Label text="Di 22.11.2014 18:14" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label fx:id="start" text="Di 22.11.2014 18:14" GridPane.columnIndex="1" GridPane.rowIndex="7" />
             <Label text="Ende" GridPane.rowIndex="8" />
-            <Label text="Di 22.11.2014 22:48" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label fx:id="end" text="Di 22.11.2014 22:48" GridPane.columnIndex="1" GridPane.rowIndex="8" />
             <Label text="Dauer" GridPane.rowIndex="9" />
-            <Label text="4:34" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <Label text="Ellikonerstrasse 97b" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="duration" text="4:34" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label fx:id="street" text="Ellikonerstrasse 97b" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <padding>
                   <Insets right="5.0" />
                </padding>
             </Label>
-            <Label text="8446 Rickenbach" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="city" text="8446 Rickenbach" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Strasse" GridPane.rowIndex="1" />
             <Label text="Ort" GridPane.rowIndex="2" />
             <Label text="Name" />
-            <Label text="Di 22.11.2014" GridPane.columnIndex="1" />
+            <Label fx:id="name" text="Di 22.11.2014" GridPane.columnIndex="1" />
          </children>
          <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="10.0" />

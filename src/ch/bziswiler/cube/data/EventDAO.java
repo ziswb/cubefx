@@ -13,24 +13,15 @@ public class EventDAO {
 
     private EventDAO() {
         this.events = Lists.newArrayList();
-        this.events.add(new Event() {
-            @Override
-            public String toString() {
-                return "Foo";
-            }
-        });
-        this.events.add(new Event() {
-            @Override
-            public String toString() {
-                return "Bar";
-            }
-        });
-        this.events.add(new Event() {
-            @Override
-            public String toString() {
-                return "Qux";
-            }
-        });
+        Event event = new Event();
+        event.setName("Foo");
+        this.events.add(event);
+        event = new Event();
+        event.setName("Bar");
+        this.events.add(event);
+        event = new Event();
+        event.setName("Qux");
+        this.events.add(event);
     }
 
     public List<Event> getEvents() {

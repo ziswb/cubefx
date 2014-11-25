@@ -5,7 +5,6 @@ import ch.bziswiler.cube.controller.datepicker.DateTimePickerController;
 import ch.bziswiler.cube.model.presentation.CubeEventModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,14 +15,9 @@ import javafx.scene.layout.Region;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.concurrent.Callable;
 
 public class CubeEventDurationController extends CubeEventControllerScaffold {
 
@@ -37,6 +31,8 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
     private Button startButton;
     @FXML
     private Button endButton;
+    @FXML
+    private Label name;
 
     @Override
     protected void doInitialize() {
@@ -50,6 +46,7 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
         this.startDateTimeLabel.textProperty().unbind();
         this.endDateTimeLabel.textProperty().unbindBidirectional(oldValue.endProperty());
         this.durationLabel.textProperty().unbind();
+        this.name.textProperty().unbind();
     }
 
     @Override
@@ -64,33 +61,11 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
         this.startDateTimeLabel.textProperty().bind(startBinding);
         this.endDateTimeLabel.textProperty().bind(endBinding);
 
-        final StringBinding hoursBinding = Bindings.createStringBinding(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                final Long hours = newValue.hoursOfEventDurationProperty().get();
-                String result = "";
-                if (hours == null) {
-                    result = "0";
-                } else {
-                    result = hours.toString();
-                }
-                return result + "h ";
-            }
-        }, newValue.hoursOfEventDurationProperty());
-        final StringBinding minutesBinding = Bindings.createStringBinding(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                final Long minutes = newValue.minutesOfEventDurationProperty().get();
-                String result = "";
-                if (minutes == null) {
-                    result = "0";
-                } else {
-                    result = minutes.toString();
-                }
-                return result + " min";
-            }
-        }, newValue.minutesOfEventDurationProperty());
+        final StringBinding hoursBinding = Bindings.createStringBinding(new DurationHoursCallable(newValue), newValue.hoursOfEventDurationProperty());
+        final StringBinding minutesBinding = Bindings.createStringBinding(new DurationMinutesCallable(newValue), newValue.minutesOfEventDurationProperty());
         this.durationLabel.textProperty().bind(Bindings.concat(hoursBinding, minutesBinding));
+
+        this.name.textProperty().bind(newValue.nameProperty());
     }
 
     @FXML
@@ -115,7 +90,6 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
         controller.setNotBefore(LocalDateTime.MIN);
         controller.setDialogStage(dialog);
         controller.setInitialDateTime(start != null ? start : now);
-        // Show the dialog and wait until the user closes it
         dialog.showAndWait();
         if (controller.isOk()) {
             getModel().setStart(controller.getPickedDateTime());
@@ -155,39 +129,4 @@ public class CubeEventDurationController extends CubeEventControllerScaffold {
         }
     }
 
-    private static class LocalDateTimeToStringCallable implements Callable<String> {
-
-        private final ObjectProperty<LocalDateTime> property;
-
-        public LocalDateTimeToStringCallable(ObjectProperty<LocalDateTime> property) {
-            this.property = property;
-        }
-
-        @Override
-        public String call() throws Exception {
-            if (property.get() == null) {
-                return "--.--.---- --:--";
-            }
-            return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(property.get());
-        }
-    }
-
-    private static class LocalDateTimeStringConverter extends StringConverter<LocalDateTime> {
-
-        @Override
-        public String toString(LocalDateTime object) {
-            if (object == null) {
-                return "--.--.---- --:--";
-            }
-            return DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).format(object);
-        }
-
-        @Override
-        public LocalDateTime fromString(String string) {
-            if (string == null) {
-                return null;
-            }
-            return LocalDateTime.from(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).parse(string));
-        }
-    }
 }

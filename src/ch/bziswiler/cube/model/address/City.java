@@ -72,10 +72,10 @@ public class City {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (zip != null ? zip.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
+        int result = nameProperty().get() != null ? nameProperty().get().hashCode() : 0;
+        result = 31 * result + (zipProperty().get() != null ? zipProperty().get().hashCode() : 0);
+        result = 31 * result + (stateProperty().get() != null ? stateProperty().get().hashCode() : 0);
+        result = 31 * result + (countryProperty().get() != null ? countryProperty().get().hashCode() : 0);
         return result;
     }
 
@@ -88,16 +88,16 @@ public class City {
             return false;
         }
         final City city = (City) o;
-        if (country != null ? !country.equals(city.country) : city.country != null) {
+        if (countryProperty().get() != null ? !countryProperty().get().equals(city.countryProperty().get()) : city.countryProperty().get() != null) {
             return false;
         }
-        if (name != null ? !name.equals(city.name) : city.name != null) {
+        if (nameProperty().get() != null ? !nameProperty().get().equals(city.nameProperty().get()) : city.nameProperty().get() != null) {
             return false;
         }
-        if (state != null ? !state.equals(city.state) : city.state != null) {
+        if (stateProperty().get() != null ? !stateProperty().get().equals(city.stateProperty().get()) : city.stateProperty().get() != null) {
             return false;
         }
-        if (zip != null ? !zip.equals(city.zip) : city.zip != null) {
+        if (zipProperty().get() != null ? !zipProperty().get().equals(city.zipProperty().get()) : city.zipProperty().get() != null) {
             return false;
         }
         return true;
