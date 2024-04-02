@@ -1,6 +1,4 @@
 Cube FX
 =======
 
-Cube Application for Jugi Rickenbach
-
-This is a Test!
+Cube Application for Jugi Rickenbach.
