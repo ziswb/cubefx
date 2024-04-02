@@ -1,4 +1,4 @@
 Cube FX
 =======
 
-Cube Application for Jugi Rickenbach
+Cube Application for Jugi Rickenbach.
